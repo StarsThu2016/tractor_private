@@ -346,7 +346,7 @@ public class Game {
             }
         }
         if (badComponent != null) {
-            currentRoundPenalties.compute(playerId, (key, penalty) -> penalty + 10);
+            currentRoundPenalties.compute(playerId, (key, penalty) -> penalty + 0); // RanEdit: was 10
             cardIds = new ArrayList<>(badComponent.getCardIds());
             sortCards(cardIds);
         }
@@ -482,7 +482,7 @@ public class Game {
                 int bonus = 2 * pastTricks.get(pastTricks.size() - 1).getPlays().get(0).getCardIds().size();
                 currentRoundScores.put(winningPlayerId, currentRoundScores.get(winningPlayerId) + bonus * totalCardScore(kitty));
             }
-            int roundScore = 0;
+            int roundScore = 5 * numDecks; // RanEdit: give a credit of 5 * numDecks for the non-declared team so that their life is easier, was "int roundScore = 0;"
             for (String playerId : playerIds) {
                 if (isDeclaringTeam.get(playerId)) {
                     roundScore += currentRoundPenalties.get(playerId);
@@ -491,10 +491,19 @@ public class Game {
                     roundScore -= currentRoundPenalties.get(playerId);
                 }
             }
+            roundScore = (roundScore < 0) ? 0 : roundScore; // RanEdit: bug fix -- cap min of roundscore at 0
             boolean doDeclarersWin = roundScore < 40 * numDecks;
             int scoreIncrease = doDeclarersWin
                     ? (roundScore == 0 ? 3 : 2 - roundScore / (20 * numDecks))
                     : roundScore / (20 * numDecks) - 2;
+
+            //int scoreIncrease = doDeclarersWin
+            //        ? (roundScore == 0 ? 5 : 4 - roundScore / (10 * numDecks))
+            //        : roundScore / (10 * numDecks) - 4;
+
+            double tmp = 2 - roundScore / (20 * numDecks);
+            System.out.println("------- " + scoreIncrease + ", " + doDeclarersWin + ", " + roundScore + ", " + tmp);
+
             finishRound(doDeclarersWin, scoreIncrease);
 
             currentPlayerIndex = -1;

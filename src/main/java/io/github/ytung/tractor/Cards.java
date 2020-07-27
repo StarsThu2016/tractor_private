@@ -13,6 +13,9 @@ public class Cards {
     /**
      * Get the suit of a card, or TRUMP if the card is a trump in this round.
      */
+
+	// RanEdit: this function decides the ordering of each suit on your hand, try to make it "red-black-red-black" for a better look.
+    //   this is a minor feature because the consecutive red is evitable if you do not have one suit, e.g. the Spade.
     public static Grouping grouping(Card card, Card trump) {
         if (trump != null && (card.getValue() == trump.getValue() || card.getSuit() == Suit.JOKER || card.getSuit() == trump.getSuit()))
             return Grouping.TRUMP;

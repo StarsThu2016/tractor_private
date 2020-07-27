@@ -322,6 +322,8 @@ public class Game {
 
         // check to see if this is a special play, and if so, whether it is valid
         Component badComponent = null;
+
+        // RanEdit: bugfix, badComponent will be update at most once, then the failure player will deal his/her smallest badComponent
         if (currentTrick.getPlays().isEmpty()) {
             List<Component> profile = getProfile(play.getCardIds());
 
@@ -340,13 +342,13 @@ public class Game {
                                 if (otherComponent.getShape().getWidth() >= component.getShape().getWidth()
                                         && otherComponent.getShape().getHeight() >= component.getShape().getHeight()
                                         && otherComponent.getMinRank() > component.getMinRank()) {
-                                    badComponent = component;
+                                    badComponent = (badComponent == null) ? component : badComponent;  // RanEdit: bugfix
                                 }
                         }
             }
         }
         if (badComponent != null) {
-            currentRoundPenalties.compute(playerId, (key, penalty) -> penalty + 0); // RanEdit: was 10
+            currentRoundPenalties.compute(playerId, (key, penalty) -> penalty + 10); // RanEdit: bookark here, keep penalty
             cardIds = new ArrayList<>(badComponent.getCardIds());
             sortCards(cardIds);
         }
@@ -493,16 +495,14 @@ public class Game {
             }
             roundScore = (roundScore < 0) ? 0 : roundScore; // RanEdit: bug fix -- cap min of roundscore at 0
             boolean doDeclarersWin = roundScore < 40 * numDecks;
-            int scoreIncrease = doDeclarersWin
-                    ? (roundScore == 0 ? 3 : 2 - roundScore / (20 * numDecks))
-                    : roundScore / (20 * numDecks) - 2;
-
             //int scoreIncrease = doDeclarersWin
-            //        ? (roundScore == 0 ? 5 : 4 - roundScore / (10 * numDecks))
-            //        : roundScore / (10 * numDecks) - 4;
+            //        ? (roundScore == 0 ? 3 : 2 - roundScore / (20 * numDecks))
+            //        : roundScore / (20 * numDecks) - 2;
 
-            double tmp = 2 - roundScore / (20 * numDecks);
-            System.out.println("------- " + scoreIncrease + ", " + doDeclarersWin + ", " + roundScore + ", " + tmp);
+            // RanEdit: speed up the game with 20/30 score for each level
+            int scoreIncrease = doDeclarersWin
+                    ? (roundScore == 0 ? 5 : 4 - roundScore / (10 * numDecks))
+                    : roundScore / (10 * numDecks) - 4;
 
             finishRound(doDeclarersWin, scoreIncrease);
 
@@ -551,6 +551,11 @@ public class Game {
 
     private void updatePlayerScore(String playerId, int scoreIncrease) {
         int newScore = playerRankScores.get(playerId).ordinal() + scoreIncrease;
+
+        // RanEdit: if someone exceeds ACE, continue by connecting TWO after ACE
+        while (newScore > Card.Value.ACE.ordinal())
+            newScore -= 13;
+
         if (newScore > Card.Value.ACE.ordinal())
             playerRankScores.put(playerId, Card.Value.ACE);
         else if (newScore < Card.Value.TWO.ordinal())
@@ -719,16 +724,46 @@ public class Game {
         if (!plays.isEmpty()) {
             List<Component> bestProfile = getProfile(plays.get(0).getCardIds());
             Grouping bestGrouping = getGrouping(plays.get(0).getCardIds());
+            /**
+             * RanEdit: Mitigate the bug by
+             * (1) Memorizing the startingProfile and startingGrouping
+             * (2) if startingProfile.size() > 1 and startingGrouping == Grouping.TRUMP, then it is the winning card
+             * (3) if startingProfile.size() > 1 and startingGrouping != Grouping.TRUMP, the one that covers it must be TRUMP
+             * (4) if startingProfile.size() == 1, should be no bug
+             *
+             * Remove the rule when you want to cover someone
+             * (1) You only need to cover the largest one, do not consider the Components of the strating player
+             * (2) You need to cover each component of previous people
+             * Bug still exists in the following cases
+             *   TRUMP 99 covers TRUMP AK if the starting player deals special play with two singles (because pair > singles)
+             *   TRUMP 99A cannot cover TRUMP 88A if the starting player deals special play with a pair and a single (because the cover rule needs to apply to each component)
+             */
+            List<Component> startingProfile = getProfile(plays.get(0).getCardIds());
+            Grouping startingGrouping = getGrouping(plays.get(0).getCardIds());
+
             for (int i = 1; i < plays.size(); i++) {
                 Play play = plays.get(i);
                 List<Component> profile = getProfile(play.getCardIds());
                 Grouping grouping = getGrouping(play.getCardIds());
-                if (hasCoveringShape(profile, bestProfile)) {
-                    if ((grouping == Grouping.TRUMP && bestGrouping != Grouping.TRUMP)
-                            || (grouping == bestGrouping && rank(profile) > rank(bestProfile))) {
+
+                // RanEdit: the previous version had else clause only.
+                if (startingProfile.size() > 1 && startingGrouping == Grouping.TRUMP)
+                    continue;
+                else if (startingProfile.size() > 1) {
+                    if (hasCoveringShape(profile, bestProfile) && grouping == Grouping.TRUMP) {
                         winningPlayerId = play.getPlayerId();
                         bestProfile = profile;
                         bestGrouping = grouping;
+                    }
+                }
+                else {
+                    if (hasCoveringShape(profile, bestProfile)) {
+                        if ((grouping == Grouping.TRUMP && bestGrouping != Grouping.TRUMP)
+                                || (grouping == bestGrouping && rank(profile) > rank(bestProfile))) {
+                            winningPlayerId = play.getPlayerId();
+                            bestProfile = profile;
+                            bestGrouping = grouping;
+                        }
                     }
                 }
             }
@@ -741,6 +776,7 @@ public class Game {
      * otherPlay is two singles, then the pair covers the singles. This method is used to check the
      * first requirement of beating a play in Tractor: whether your play has the same "shape".
      */
+    // RanEdit: bug notice -- if otherPlay.size() > 1, this is a special play, the length of myPlay and otherPlay can be different and leads to an error outcome, e.g. 99 > AK.
     private static boolean hasCoveringShape(List<Component> myPlay, List<Component> otherPlay) {
         TreeMultiset<Shape> myShapes = TreeMultiset.create(Comparator.comparing(shape -> shape.getWidth() * shape.getHeight()));
         for (Component component : myPlay)

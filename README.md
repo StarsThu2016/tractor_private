@@ -7,16 +7,16 @@
 * Bug1: if first flayer deals QQQA, followers must play 2 pairs if he/she has.
 * Bug2: if first player deals 5566, followers can play 99QJ if he/she has 99AAAKQJ.
 
-## Ran's other modification
-(1) Bugfix: if the first player is a special play, e.g. spades AK, the following player cannot cover by spades 99
-(2) Bugfix: if a special play fails, the player plays the smallest bad component
-(3) Change background music to "find a friend".
+## Ran's other modifications
+* Bugfix: if the first player is a special play, e.g. spades AK, the following player cannot cover by spades 99
+* Bugfix: if a special play fails, the player plays the smallest bad component
+* Change background music to "find a friend".
 
-## Existing bugs and future improvemnts
-(1) TRUMP 99 should not cover TRUMP AK
-(2) First flayer deals QQQA, follower has to play two pairs 99AA. Ideally, he/she just needs to play one pair.
-(3) First flayer deals 5566, follower has 99AAAKQJ and can play 99QJ. Ideally, he/she must play 99AA.
-(4) On the UI, the cards should be sorted so that the color is like "black-red-balck-red".
+## Bugs and future improvemnts
+* TRUMP 99 should not cover TRUMP AK
+* First flayer deals QQQA, follower has to play two pairs 99AA. Ideally, he/she just needs to play one pair.
+* First flayer deals 5566, follower has 99AAAKQJ and can play 99QJ. Ideally, he/she must play 99AA.
+* On the UI, the cards should be sorted so that the color is like "black-red-balck-red".
 
 ## Introduction
 Multiplayer online tractor game. Try it at https://orange-tractor.herokuapp.com/.

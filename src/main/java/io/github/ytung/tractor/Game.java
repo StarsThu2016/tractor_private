@@ -484,7 +484,9 @@ public class Game {
                 int bonus = 2 * pastTricks.get(pastTricks.size() - 1).getPlays().get(0).getCardIds().size();
                 currentRoundScores.put(winningPlayerId, currentRoundScores.get(winningPlayerId) + bonus * totalCardScore(kitty));
             }
-            int roundScore = 5 * numDecks; // [EditByRan] give a credit of 5 * numDecks for the non-declared team so that their life is easier, was "int roundScore = 0;"
+
+            // [EditByRan] give a credit of 5 * numDecks for the non-declared team so that their life is easier, was "int roundScore = 0;"
+            int roundScore = (playerIds.size() % 2 == 0) ? (5 * numDecks) : 0;
             for (String playerId : playerIds) {
                 if (isDeclaringTeam.get(playerId)) {
                     roundScore += currentRoundPenalties.get(playerId);

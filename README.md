@@ -32,7 +32,19 @@ Multiplayer online tractor game. Try it at https://orange-tractor.herokuapp.com/
 
 Go to http://localhost:8080.
 
-## Start a server on AWS
+## Start a game server on the AWS EC2 instance
+* Launch a m5.large on-demand EC2 instance in US East (Ohio) Zone, with 8080 port open.
+
+```
+chmod 400 tractor_share.pem
+ssh -i tractor_share.pem ubuntu@{ip_address}
+screen
+cd tractor_private/
+npm run build
+./gradlew run
+```
+
+Players then can visit http://{ip_address}:8080/#/{room_number}
 
 ## Features:
 

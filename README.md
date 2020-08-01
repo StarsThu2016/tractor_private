@@ -14,6 +14,8 @@
 
 ## Bugs and future improvemnts
 * TRUMP 99 should not cover TRUMP AK
+* In a 3-deck game, if first player plays 5566, the following player with 777 can play 2389. Ideally, he/she must play 77.
+* In a NO-TRUMP rank 3 game, first player makes a special play. Second player covers by diamond and club 3, thrid player can cover again by heart and spade 3. Ideally, he/she cannot cover because all 3s are equally large in NO-TRUP setup.
 * First flayer deals QQQA, follower has to play two pairs 99AA. Ideally, he/she just needs to play one pair.
 * First flayer deals 5566, follower has 99AAAKQJ and can play 99QJ. Ideally, he/she must play 99AA.
 * On the UI, the cards should be sorted so that the color is like "black-red-balck-red".

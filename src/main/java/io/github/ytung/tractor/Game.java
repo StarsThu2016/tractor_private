@@ -485,8 +485,8 @@ public class Game {
                 currentRoundScores.put(winningPlayerId, currentRoundScores.get(winningPlayerId) + bonus * totalCardScore(kitty));
             }
 
-            // [EditByRan] give a credit of 5 * numDecks for the non-declared team so that their life is easier, was "int roundScore = 0;"
-            int roundScore = (playerIds.size() % 2 == 0) ? (5 * numDecks) : 0;
+            // [EditByRan] give a balance credit of 5 * numDecks to the non-declarer team in the findAFriend mode, was "int roundScore = 0;"
+            int roundScore = (playerIds.size() % 2 == 0 && findAFriend) ? (5 * numDecks) : 0;
             for (String playerId : playerIds) {
                 if (isDeclaringTeam.get(playerId)) {
                     roundScore += currentRoundPenalties.get(playerId);
@@ -752,13 +752,42 @@ public class Game {
                 Grouping grouping = getGrouping(play.getCardIds());
 
                 // [EditByRan] the previous version had else clause only.
-                if (startingProfile.size() > 1 && startingGrouping == Grouping.TRUMP)
+                if (startingProfile.size() > 1 && startingGrouping == Grouping.TRUMP)  // Special play in TRUMP is the largest
                     continue;
-                else if (startingProfile.size() > 1) {
-                    if (hasCoveringShape(profile, bestProfile) && grouping == Grouping.TRUMP) {
-                        winningPlayerId = play.getPlayerId();
-                        bestProfile = profile;
-                        bestGrouping = grouping;
+                else if (startingProfile.size() > 1 && startingGrouping != Grouping.TRUMP && grouping != Grouping.TRUMP)  // Special play within non-TRUMP is the largest
+                    continue;
+                else if (startingProfile.size() > 1){ // Special play: non-trump vs trump
+                    // System.out.println("Before comparing in a special play. profile, bestProfile ="); 
+                    // System.out.println(profile);
+                    // System.out.println(bestProfile);
+                    // System.out.println("");
+                    if (hasCoveringShape(profile, bestProfile)){
+                        if ((grouping == Grouping.TRUMP && bestGrouping != Grouping.TRUMP)
+                                || (grouping == bestGrouping && rank(profile) > rank(bestProfile))) {
+                            // System.out.println("A cover over special play happens. Let's print startPlayer, startCardIds, startingProfile, startingGrouping"); 
+                            // System.out.println(trick.getStartPlayerId());
+                            // System.out.println(plays.get(0).getCardIds());
+                            // System.out.println(startingProfile);
+                            // System.out.println(startingGrouping);
+                            // System.out.println("A cover over special play happens. Let's print winningPlayerId, bestProfile, bestGrouping"); 
+                            // System.out.println(winningPlayerId);
+                            // System.out.println(bestProfile);
+                            // System.out.println(bestGrouping);
+                            // System.out.println("A cover over special play happens. Let's print currentPlayerID, profile, grouping"); 
+                            // System.out.println(play.getPlayerId());
+                            // System.out.println(profile);
+                            // System.out.println(grouping);
+                            
+                            winningPlayerId = play.getPlayerId();
+                            bestProfile = profile;
+                            bestGrouping = grouping;
+                            
+                            // System.out.println("A cover over special play happens. Let's print winningPlayerId, bestProfile, bestGrouping"); 
+                            // System.out.println(winningPlayerId);
+                            // System.out.println(bestProfile);
+                            // System.out.println(bestGrouping);
+                            // System.out.println("");
+                        }
                     }
                 }
                 else {
@@ -791,6 +820,10 @@ public class Game {
             .sorted(Comparator.<Shape, Integer>comparing(shape -> shape.getWidth() * shape.getHeight()).reversed())
             .collect(Collectors.toList());
 
+        System.out.println("hasCoveringShape. myShapes, otherShapes ="); 
+        System.out.println(myShapes);
+        System.out.println(otherShapes);
+        
         for (Shape otherShape : otherShapes) {
             // For each shape in the other play, find a component of my play that "covers" it (has at least that width
             // and height), and then remove the relevant cards. This is a greedy algorithm that isn't guaranteed to be
@@ -798,6 +831,9 @@ public class Game {
             // play's largest components.
             boolean found = false;
             for (Shape myShape : myShapes) {
+                System.out.println("hasCoveringShape::in_for(). otherShape, myShape"); 
+                System.out.println(otherShape);
+                System.out.println(myShape);
                 if (myShape.getWidth() >= otherShape.getWidth() && myShape.getHeight() >= otherShape.getHeight()) {
                     myShapes.remove(myShape);
                     if (myShape.getHeight() > otherShape.getHeight())
@@ -810,6 +846,9 @@ public class Game {
             }
             if (!found)
                 return false;
+            System.out.println("hasCoveringShape::in_for(). found = True, print otherShape"); 
+            System.out.println(otherShape); 
+            System.out.println(""); 
         }
         return myShapes.isEmpty();
     }

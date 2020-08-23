@@ -1,7 +1,7 @@
 # Tractor (拖拉机)
 
 ## Ran's House Rule
-* Compensate: give a 10/15 credit points to the non-declare team, when there are 4/6 players in total
+* Compensate: give a 10/15 credit points to the non-declare team (find a friend mode only), when there are 4/6 players in total
 * Boost: 20/30 points per level
 * No cap: if a player's rank exceed A, then continue with 2
 * Bug1: if first flayer deals QQQA, followers must play 2 pairs if he/she has.
@@ -15,11 +15,8 @@
 ## Bugs and future improvemnts
 * TRUMP 99 should not cover TRUMP AK
 * In a 3-deck game, if first player plays 5566, the following player with 777 can play 2389. Ideally, he/she must play 77.
-* In a NO-TRUMP rank 3 game, first player makes a special play. Second player covers by diamond and club 3, thrid player can cover again by heart and spade 3. Ideally, he/she cannot cover because all 3s are equally large in NO-TRUMP setup.
 * First flayer palys QQQA, follower has to play two pairs 99AA. Ideally, he/she just needs to play one pair.
-* First flayer plays 5566, follower has 99AAAKQJ and can play 99QJ. Ideally, he/she must play 99AA.
 * On the UI, the cards should be sorted so that the color is like "black-red-balck-red".
-* Display the score of the ZHUANG team if number of players >= 6. This will help players make a DECLARE decision.
 
 ## Introduction
 Multiplayer online tractor game. Try it at https://orange-tractor.herokuapp.com/.

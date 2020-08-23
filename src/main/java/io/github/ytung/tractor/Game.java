@@ -728,9 +728,8 @@ public class Game {
             Grouping bestGrouping = getGrouping(plays.get(0).getCardIds());
             /**
              * [EditByRan] Root cause of the bug:
-             * (1) The author solves the "cover" problem as a "one-beat-one" model, this is wrong. TRUMP 99J may be larger than 88A and may be smaller than it, depending on what starting player play.
-             * (2) The author think a pair is always one rank higher than two singles. Which is totally wrong. If starting player deals spade AK, spade 99 can never cover it. 
-             *
+             * A 99 can be either a pair if the first player plays a pair, or two singles if the first players plays singles. However, 99 is always a pair in this version
+             * 
              * [EditByRan] Mitigate the bug by,
              * (1) Memorizing the startingProfile and startingGrouping
              * (2) if startingProfile.size() > 1 and startingGrouping == Grouping.TRUMP, then it is a winning hand
@@ -739,7 +738,7 @@ public class Game {
              * 
              * [EditByRan] Bug still exists in the following cases,
              *   TRUMP 99 covers TRUMP AK if the starting player deals special play with two singles (because pair > singles)
-             *   [?] TRUMP 99A cannot cover TRUMP 88A if the starting player deals special play with a pair and a single (because the cover rule needs to apply to each component)
+             *   [?] TRUMP 99A cannot cover TRUMP 88A if the starting player deals special play with a pair and a single?
              *
              * [EditByRan] Before the bug is fully fix, this is the rule when you want to cover someone (B), with starting player (A): you only need to cover B's hand instead of looking at A and B
              */
@@ -756,41 +755,7 @@ public class Game {
                     continue;
                 else if (startingProfile.size() > 1 && startingGrouping != Grouping.TRUMP && grouping != Grouping.TRUMP)  // Special play within non-TRUMP is the largest
                     continue;
-                else if (startingProfile.size() > 1){ // Special play: non-trump vs trump
-                    // System.out.println("Before comparing in a special play. profile, bestProfile ="); 
-                    // System.out.println(profile);
-                    // System.out.println(bestProfile);
-                    // System.out.println("");
-                    if (hasCoveringShape(profile, bestProfile)){
-                        if ((grouping == Grouping.TRUMP && bestGrouping != Grouping.TRUMP)
-                                || (grouping == bestGrouping && rank(profile) > rank(bestProfile))) {
-                            // System.out.println("A cover over special play happens. Let's print startPlayer, startCardIds, startingProfile, startingGrouping"); 
-                            // System.out.println(trick.getStartPlayerId());
-                            // System.out.println(plays.get(0).getCardIds());
-                            // System.out.println(startingProfile);
-                            // System.out.println(startingGrouping);
-                            // System.out.println("A cover over special play happens. Let's print winningPlayerId, bestProfile, bestGrouping"); 
-                            // System.out.println(winningPlayerId);
-                            // System.out.println(bestProfile);
-                            // System.out.println(bestGrouping);
-                            // System.out.println("A cover over special play happens. Let's print currentPlayerID, profile, grouping"); 
-                            // System.out.println(play.getPlayerId());
-                            // System.out.println(profile);
-                            // System.out.println(grouping);
-                            
-                            winningPlayerId = play.getPlayerId();
-                            bestProfile = profile;
-                            bestGrouping = grouping;
-                            
-                            // System.out.println("A cover over special play happens. Let's print winningPlayerId, bestProfile, bestGrouping"); 
-                            // System.out.println(winningPlayerId);
-                            // System.out.println(bestProfile);
-                            // System.out.println(bestGrouping);
-                            // System.out.println("");
-                        }
-                    }
-                }
-                else {
+                else { // Special play: non-trump vs trump, or normal play
                     if (hasCoveringShape(profile, bestProfile)) {
                         if ((grouping == Grouping.TRUMP && bestGrouping != Grouping.TRUMP)
                                 || (grouping == bestGrouping && rank(profile) > rank(bestProfile))) {

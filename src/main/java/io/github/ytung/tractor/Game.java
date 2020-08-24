@@ -325,8 +325,10 @@ public class Game {
 
         // [EditByRan] bugfix, badComponent will be update at most once, then the failure player will deal his/her smallest badComponent
         if (currentTrick.getPlays().isEmpty()) {
-            List<Component> profile = getProfile(play.getCardIds());
-
+            // [EditByRan]: the starting player has WidthCap = 10, meaning no limit
+            List<Component> profile = getProfile(play.getCardIds(), 10);
+            int startingWidthCap = profile.stream().mapToInt(component -> component.getShape().getWidth()).max().orElse(0);
+            
             if (profile.size() > 1) {
                 if (!confirmSpecialPlay)
                     throw new ConfirmSpecialPlayException();
@@ -338,7 +340,8 @@ public class Game {
                             List<Integer> sameSuitCardIds = playerHands.get(otherPlayerId).stream()
                                 .filter(cardId -> Cards.grouping(cardsById.get(cardId), trump) == getGrouping(play.getCardIds()))
                                 .collect(Collectors.toList());
-                            for (Component otherComponent : getProfile(sameSuitCardIds))
+                            // [EditByRan]: following players are limited by startingWidthCap 
+                            for (Component otherComponent : getProfile(sameSuitCardIds, startingWidthCap))
                                 if (otherComponent.getShape().getWidth() >= component.getShape().getWidth()
                                         && otherComponent.getShape().getHeight() >= component.getShape().getHeight()
                                         && otherComponent.getMinRank() > component.getMinRank()) {
@@ -348,7 +351,7 @@ public class Game {
             }
         }
         if (badComponent != null) {
-            currentRoundPenalties.compute(playerId, (key, penalty) -> penalty + 10); // [EditByRan] bookark here, keep penalty
+            currentRoundPenalties.compute(playerId, (key, penalty) -> penalty + 10);
             cardIds = new ArrayList<>(badComponent.getCardIds());
             sortCards(cardIds);
         }
@@ -381,7 +384,8 @@ public class Game {
         Card trump = getCurrentTrump();
         if (currentTrick.getPlays().isEmpty()) {
             // first play of trick
-            List<Component> profile = getProfile(play.getCardIds());
+            // [EditByRan]: the starting player has WidthCap = 10, meaning no limit
+            List<Component> profile = getProfile(play.getCardIds(), 10);
             if (profile.isEmpty())
                 throw new InvalidPlayException("You must play cards in only one suit.");
         } else {
@@ -400,17 +404,24 @@ public class Game {
                 throw new InvalidPlayException("You must follow suit.");
             }
 
-            for (Component handComponent : getProfile(sameSuitCards)) {
+            // [EditByRan]: the starting player has WidthCap = 10, meaning no limit
+            int startingWidthCap = getProfile(startingPlay.getCardIds(), 10).stream().mapToInt(component -> component.getShape().getWidth()).max().orElse(0);
+            
+            // [EditByRan]: following players are limited by startingWidthCap 
+            for (Component handComponent : getProfile(sameSuitCards, startingWidthCap)) {
                 Shape handShape = handComponent.getShape();
-                boolean isCapturedByStartingPlay = getProfile(startingPlay.getCardIds()).stream()
+                // [EditByRan]: the starting player has WidthCap = 10, meaning no limit
+                // isCapturedByStartingPlay is always True, because all handShape.getWidth() should be <= startingWidthCap
+                boolean isCapturedByStartingPlay = getProfile(startingPlay.getCardIds(), 10).stream()
                     .map(Component::getShape)
                     .anyMatch(shape -> shape.getWidth() >= handShape.getWidth());
-                boolean inPlay = getProfile(play.getCardIds()).contains(handComponent);
+                boolean inPlay = getProfile(play.getCardIds(), startingWidthCap).contains(handComponent);
                 // Suppose the starting player played pairs. If you have any pairs (isCapturedByStartingPlay), but you didn't play it
                 // (!inPlay), then look at how many cards you played are worse than it (numFreeCardsInPlay). If there are at least as many
                 // worse cards (2), then those cards could have been replaced with the pair. This logic extends for any set of n cards.
                 if (isCapturedByStartingPlay && !inPlay) {
-                    int numFreeCardsInPlay = getProfile(play.getCardIds()).stream()
+                    // [EditByRan]: following players are limited by startingWidthCap 
+                    int numFreeCardsInPlay = getProfile(play.getCardIds(), startingWidthCap).stream()
                         .map(Component::getShape)
                         .filter(shape -> shape.getWidth() < handShape.getWidth())
                         .mapToInt(shape -> shape.getWidth() * shape.getHeight())
@@ -676,7 +687,8 @@ public class Game {
         return groupings.size() == 1 ? Iterables.getOnlyElement(groupings) : null;
     }
 
-    public List<Component> getProfile(Collection<Integer> cardIds) {
+    // [EditByRan]
+    public List<Component> getProfile(Collection<Integer> cardIds, int widthCap) {
         if (getGrouping(cardIds) == null)
             return new ArrayList<>();
 
@@ -694,10 +706,43 @@ public class Game {
                     cardIds.stream().filter(cardId -> cardsById.get(cardId).equals(card)).collect(Collectors.toSet()));
             })
             .collect(Collectors.toList());
-
+        
+        // [EditByRan] New function that split Component based on the widthCap
+        while (splitComponentsUnderWidthCap(profile, widthCap));
+        
         while (combineConsecutiveComponents(profile));
 
         return profile;
+    }
+    
+    // [EditByRan] New function that split Component based on the widthCap
+    private static boolean splitComponentsUnderWidthCap(List<Component> profile, int widthCap) {
+        for (int i = 0; i < profile.size(); i++) {
+            Component component = profile.get(i);
+            if (component.shape.width > widthCap){
+                List<Integer> cardIdsList = component.cardIds.stream().collect(Collectors.toList());
+                List<Integer> cardIdsList1 = cardIdsList.subList(0, widthCap);
+                List<Integer> cardIdsList2 = cardIdsList.subList(widthCap, component.shape.width);
+                profile.add(
+                    new Component(
+                        new Shape(widthCap, component.shape.height),
+                        component.minRank,
+                        component.maxRank,
+                        cardIdsList1.stream().collect(Collectors.toSet())
+                    )
+                );
+                profile.set(i, 
+                    new Component(
+                        new Shape(component.shape.width - widthCap, component.shape.height),
+                        component.minRank,
+                        component.maxRank,
+                        cardIdsList2.stream().collect(Collectors.toSet())
+                    )
+                );
+                return true;
+            }
+        }
+        return false;
     }
 
     private static boolean combineConsecutiveComponents(List<Component> profile) {
@@ -724,8 +769,10 @@ public class Game {
         String winningPlayerId = trick.getStartPlayerId();
         List<Play> plays = trick.getPlays();
         if (!plays.isEmpty()) {
-            List<Component> bestProfile = getProfile(plays.get(0).getCardIds());
+            // [EditByRan]: the starting player has WidthCap = 10, meaning no limit
+            List<Component> bestProfile = getProfile(plays.get(0).getCardIds(), 10);
             Grouping bestGrouping = getGrouping(plays.get(0).getCardIds());
+            
             /**
              * [EditByRan] Root cause of the bug:
              * A 99 can be either a pair if the first player plays a pair, or two singles if the first players plays singles. However, 99 is always a pair in this version
@@ -742,12 +789,16 @@ public class Game {
              *
              * [EditByRan] Before the bug is fully fix, this is the rule when you want to cover someone (B), with starting player (A): you only need to cover B's hand instead of looking at A and B
              */
-            List<Component> startingProfile = getProfile(plays.get(0).getCardIds());
+             
+            // [EditByRan]: the starting player has WidthCap = 10, meaning no limit
+            List<Component> startingProfile = getProfile(plays.get(0).getCardIds(), 10);
             Grouping startingGrouping = getGrouping(plays.get(0).getCardIds());
+            int startingWidthCap = startingProfile.stream().mapToInt(component -> component.getShape().getWidth()).max().orElse(0);
 
             for (int i = 1; i < plays.size(); i++) {
                 Play play = plays.get(i);
-                List<Component> profile = getProfile(play.getCardIds());
+                // [EditByRan]: following players are limited by startingWidthCap
+                List<Component> profile = getProfile(play.getCardIds(), startingWidthCap);
                 Grouping grouping = getGrouping(play.getCardIds());
 
                 // [EditByRan] the previous version had else clause only.

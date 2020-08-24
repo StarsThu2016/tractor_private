@@ -121,7 +121,8 @@ public class BayesianAiClient extends SimpleAiClient {
         if (currentTrick.getPlays().isEmpty()) {
             // If I lead, I can lead with any component
             for (Grouping grouping : myHandByGrouping.keySet()) {
-                List<Component> profile = game.getProfile(myHandByGrouping.get(grouping));
+                // [EditByRan]: the starting player has WidthCap = 10, meaning no limit
+                List<Component> profile = game.getProfile(myHandByGrouping.get(grouping), 10);
                 for (Component component : profile)
                     candidatePlays.add(component.getCardIds());
             }
@@ -136,7 +137,12 @@ public class BayesianAiClient extends SimpleAiClient {
                 .get();
             List<Integer> winningCardIds = winningPlay.getCardIds();
             Grouping winningGrouping = game.getGrouping(winningCardIds);
-            List<Component> winningProfile = game.getProfile(winningCardIds);
+            
+            // [EditByRan]: following players are limited by startingWidthCap 
+            List<Component> startingProfile = game.getProfile(startingCardIds, 10);
+            int startingWidthCap = startingProfile.stream().mapToInt(component -> component.getShape().getWidth()).max().orElse(0);
+            
+            List<Component> winningProfile = game.getProfile(winningCardIds, startingWidthCap);
             // Optimization: ensure I try to beat the largest component first, etc.
             // Otherwise, I might use up a card in my pair to beat a single, and then not be able to beat the pair
             Collections.sort(
@@ -183,7 +189,13 @@ public class BayesianAiClient extends SimpleAiClient {
             List<Integer> myCardIds,
             boolean areMyCardIdsInSameSuit,
             List<Collection<Integer>> candidatePlays) {
-        List<Component> myProfile = game.getProfile(myCardIds);
+        // [EditByRan]: following players are limited by startingWidthCap 
+        Trick currentTrick = game.getCurrentTrick();
+        List<Integer> startingCardIds = currentTrick.getPlays().get(0).getCardIds();
+        List<Component> startingProfile = game.getProfile(startingCardIds, 10);
+        int startingWidthCap = startingProfile.stream().mapToInt(component -> component.getShape().getWidth()).max().orElse(0);
+        
+        List<Component> myProfile = game.getProfile(myCardIds, startingWidthCap);
         Collections.sort(
             myProfile,
             Comparator.<Component, Integer> comparing(component -> component.getShape().getWidth())
@@ -260,12 +272,14 @@ public class BayesianAiClient extends SimpleAiClient {
             boolean playPoints) {
         Map<Integer, Card> cardsById = game.getCardsById();
         Card trump = game.getCurrentTrump();
-
-        List<Component> startingProfile = game.getProfile(startingCardIds);
+        
+        // [EditByRan]: the starting player has WidthCap = 10, meaning no limit
+        List<Component> startingProfile = game.getProfile(startingCardIds, 10);
         int maxWidth = startingProfile.stream().mapToInt(component -> component.getShape().getWidth()).max().orElse(0);
 
+        // [EditByRan]: following players are limited by maxWidth 
         return myHandByGrouping.values().stream()
-            .flatMap(cardIds -> game.getProfile(cardIds).stream())
+            .flatMap(cardIds -> game.getProfile(cardIds, maxWidth).stream())
             .sorted(Comparator.comparing(component -> {
                 // Scoring function that first prioritizes cards that you *must* play (e.g. same suit, smaller width)
                 // Then prioritizes lower cards and components with smaller width since you can't win anyway
@@ -305,7 +319,8 @@ public class BayesianAiClient extends SimpleAiClient {
 
         int startingPlayerIndex = playerIds.indexOf(currentTrickWithMyPlay.getStartPlayerId());
         List<Integer> startingPlay = currentTrickWithMyPlay.getPlays().get(0).getCardIds();
-        List<Component> startingComponents = game.getProfile(startingPlay);
+        // [EditByRan]: the starting player has WidthCap = 10, meaning no limit
+        List<Component> startingComponents = game.getProfile(startingPlay, 10);
 
         List<String> remainingPlayerIds = new ArrayList<>();
         for (int i = currentTrickWithMyPlay.getPlays().size(); i < playerIds.size(); i++)

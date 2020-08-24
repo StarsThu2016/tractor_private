@@ -1,22 +1,20 @@
 # Tractor (拖拉机)
 
 ## Ran's House Rule
-* Compensate: give a 10/15 credit points to the non-declare team (find a friend mode only), when there are 4/6 players in total
-* Boost: 20/30 points per level
-* No cap: if a player's rank exceed A, then continue with 2
-* Bug1: if first flayer deals QQQA, followers must play 2 pairs if he/she has.
-* Bug2: if first player deals 5566, followers can play 99QJ if he/she has 99AAAKQJ.
+* Compensate: give a 10/15 credit points to the non-declare team (find a friend mode only), when there are 4/6/8 players in total.
+* Boost: 20/30/40 points per rank.
+* No-cap: if a player's rank exceeds A, then continues with 2.
 
-## Ran's other modifications
-* Bugfix: if the first player is a special play, e.g. spades AK, the following player cannot cover by spades 99
-* Bugfix: if a special play fails, the player plays the smallest bad component
-* Change background music to "find a friend".
+## Ran's patch to the bugs or modifications
+* Patch 1: if the first player makes a special play, e.g. spades AK, the following player cannot cover by spades 99.
+* Patch 2: if the first player makes a special play with singles and the following player covers, the rank of the hand is determined by the max of singles.
+* Patch 3: in a 3-deck game, if first player plays 5566, the following player with 2389777 must play 77.
+* Patch 4: if a special play fails, the player plays the smallest bad component.
+* Change the background music to "find a friend".
 
-## Bugs and future improvemnts
-* TRUMP 99 should not cover TRUMP AK
-* In a 3-deck game, if first player plays 5566, the following player with 777 can play 2389. Ideally, he/she must play 77.
-* First flayer palys QQQA, follower has to play two pairs 99AA. Ideally, he/she just needs to play one pair.
-* On the UI, the cards should be sorted so that the color is like "black-red-balck-red".
+## Bugs and future improvements
+* First player plays QQQA, the follower with 99AA has to play both pairs, instead of just one. This is because both "99" and "AA" belong to the "must-play" set and the player cannot replace one of them by two singles.
+* On the UI, the cards should be sorted so that the color is "black-red-black-red".
 
 ## Introduction
 Multiplayer online tractor game. Try it at https://orange-tractor.herokuapp.com/.

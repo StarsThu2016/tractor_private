@@ -123,8 +123,10 @@ public class SimpleAiClient implements AiClient {
             // Do I have a pair?
             int bestPairRank = -1;
             List<Integer> bestPair = null;
+
+			// [EditByRan]: the starting player has WidthCap = 10, meaning no limit
             for (List<Integer> sameSuitCards : myHandByGrouping.values())
-                for (Component component : game.getProfile(sameSuitCards))
+                for (Component component : game.getProfile(sameSuitCards, 10))
                     if (component.getShape().getWidth() >= 2) {
                         int rank = component.getMaxRank();
                         if (rank > bestPairRank) {
@@ -146,8 +148,12 @@ public class SimpleAiClient implements AiClient {
 
         Play startingPlay = currentTrick.getPlays().get(0);
         List<Integer> startingCardIds = startingPlay.getCardIds();
-        List<Component> startingProfile = game.getProfile(startingPlay.getCardIds());
+        // [EditByRan]: the starting player has WidthCap = 10, meaning no limit
+        List<Component> startingProfile = game.getProfile(startingPlay.getCardIds(), 10);
         Grouping startingGrouping = game.getGrouping(startingPlay.getCardIds());
+        // [EditByRan]: following players are limited by startingWidthCap 
+        int startingWidthCap = startingProfile.stream().mapToInt(component -> component.getShape().getWidth()).max().orElse(0);
+        
         Collections.sort(
             startingProfile,
             Comparator.<Component, Integer> comparing(component -> component.getShape().getWidth())
@@ -160,7 +166,7 @@ public class SimpleAiClient implements AiClient {
         if (sameSuitCards.isEmpty()) {
             List<Integer> trumpCardIds = new ArrayList<>(myHandByGrouping.get(Grouping.TRUMP));
             List<Integer> myCardIds = new ArrayList<>();
-            List<Component> profile = game.getProfile(trumpCardIds);
+            List<Component> profile = game.getProfile(trumpCardIds, startingWidthCap);
             for (Component startingComponent : startingProfile)
                 for (Component component : profile)
                     if (trumpCardIds.containsAll(component.getCardIds())
@@ -183,7 +189,7 @@ public class SimpleAiClient implements AiClient {
         }
 
         // Can I beat it in the same suit?
-        List<Component> profile = game.getProfile(sameSuitCards);
+        List<Component> profile = game.getProfile(sameSuitCards, startingWidthCap);
         Collections.sort(
             profile,
             Comparator.<Component, Integer> comparing(component -> component.getShape().getWidth())

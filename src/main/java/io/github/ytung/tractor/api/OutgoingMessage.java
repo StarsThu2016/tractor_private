@@ -86,6 +86,7 @@ public interface OutgoingMessage {
     public static class LeaveRoom implements OutgoingMessage {
     }
 
+    // [EditByRan] Implement must-play-rank feature.
     @Data
     public static class FullRoomState implements OutgoingMessage {
 
@@ -93,6 +94,9 @@ public interface OutgoingMessage {
 
         private final int numDecks;
         private final boolean findAFriend;
+        private final boolean mustPlay5;
+        private final boolean mustPlay10;
+        private final boolean mustPlayK;
 
         private final int roundNumber;
         private final int starterPlayerIndex;
@@ -129,12 +133,16 @@ public interface OutgoingMessage {
         private final String myPlayerId;
     }
 
+    // [EditByRan] Implement must-play-rank feature.
     @Data
     public static class UpdatePlayers implements OutgoingMessage {
 
         private final List<String> playerIds;
         private final Map<String, Card.Value> playerRankScores;
         private final boolean findAFriend;
+        private final boolean mustPlay5;
+        private final boolean mustPlay10;
+        private final boolean mustPlayK;
         private final int kittySize;
         private final Set<String> aiControllers;
         private final Set<String> humanControllers;
@@ -142,11 +150,15 @@ public interface OutgoingMessage {
         private final Map<String, Boolean> playerReadyForPlay;
     }
 
+    // [EditByRan] Implement must-play-rank feature.
     @Data
     public static class GameConfiguration implements OutgoingMessage {
 
         private final int numDecks;
         private final boolean findAFriend;
+        private final boolean mustPlay5;
+        private final boolean mustPlay10;
+        private final boolean mustPlayK;
         private final int kittySize;
         private final Map<String, Boolean> playerReadyForPlay;
     }

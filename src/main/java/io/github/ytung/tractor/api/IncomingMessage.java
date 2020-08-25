@@ -103,12 +103,16 @@ public interface IncomingMessage {
         private String playerId;
     }
 
+    // [EditByRan] Implement must-play-rank feature.
     @Data
     @NoArgsConstructor
     public static class GameConfigurationRequest implements IncomingMessage {
 
         private int numDecks;
         private boolean findAFriend;
+        private boolean mustPlay5;
+        private boolean mustPlay10;
+        private boolean mustPlayK;
     }
 
     @Data

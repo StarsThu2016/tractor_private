@@ -122,10 +122,14 @@ public class TractorRoom {
             broadcastUpdatePlayers(r.getBroadcaster());
         }
 
+        // [EditByRan] Implement must-play-rank feature.
         r.write(JacksonEncoder.INSTANCE.encode(new FullRoomState(
             game.getPlayerIds(),
             game.getNumDecks(),
             game.isFindAFriend(),
+            game.isMustPlay5(),
+            game.isMustPlay10(),
+            game.isMustPlayK(),
             game.getRoundNumber(),
             game.getStarterPlayerIndex(),
             game.getPlayerRankScores(),
@@ -256,13 +260,20 @@ public class TractorRoom {
             }
         }
 
+        // [EditByRan] Implement must-play-rank feature.
         if (message instanceof GameConfigurationRequest) {
             game.setNumDecks(((GameConfigurationRequest) message).getNumDecks());
             game.setFindAFriend(((GameConfigurationRequest) message).isFindAFriend());
+            game.setMustPlay5(((GameConfigurationRequest) message).isMustPlay5());
+            game.setMustPlay10(((GameConfigurationRequest) message).isMustPlay10());
+            game.setMustPlayK(((GameConfigurationRequest) message).isMustPlayK());
             playerReadyForPlay.replaceAll((k, v) -> v=false);
             sendSync(broadcaster, new GameConfiguration(
                 game.getNumDecks(),
                 game.isFindAFriend(),
+                game.isMustPlay5(),
+                game.isMustPlay10(),
+                game.isMustPlayK(),
                 game.getKittySize(),
                 playerReadyForPlay));
         }
@@ -504,6 +515,9 @@ public class TractorRoom {
             game.getPlayerIds(),
             game.getPlayerRankScores(),
             game.isFindAFriend(),
+            game.isMustPlay5(),
+            game.isMustPlay10(),
+            game.isMustPlayK(),
             game.getKittySize(),
             aiControllers.keySet(),
             humanControllers.keySet(),

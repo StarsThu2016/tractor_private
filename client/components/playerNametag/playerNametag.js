@@ -14,6 +14,10 @@ export class PlayerNametag extends React.Component {
             playerNames,
             playerIds,
             findAFriend,
+            // [EditByRan] Implement must-play-rank feature.
+            mustPlay5,
+            mustPlay10,
+            mustPlayK,
             status,
             currentPlayerIndex,
             isDeclaringTeam,

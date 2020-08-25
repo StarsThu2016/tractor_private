@@ -21,6 +21,7 @@ export class RoundStartPanel extends React.Component {
     }
 
     render() {
+        // [EditByRan] Implement must-play-rank feature.
         const {
             aiControllers,
             humanControllers,
@@ -31,6 +32,9 @@ export class RoundStartPanel extends React.Component {
             playerIds,
             numDecks,
             findAFriend,
+            mustPlay5,
+            mustPlay10,
+            mustPlayK,
             playerRankScores,
             winningPlayerIds,
             setPlayerOrder, // PlayerId[] => void
@@ -146,11 +150,11 @@ export class RoundStartPanel extends React.Component {
                     <div>
                         <i
                             className={numDecks < 10 ? 'arrow up' : 'hidden'}
-                            onClick={() => setGameConfiguration({ numDecks: numDecks + 1, findAFriend })}
+                            onClick={() => setGameConfiguration({ numDecks: numDecks + 1, findAFriend, mustPlay5, mustPlay10, mustPlayK })}
                         />
                         <i
                             className={numDecks > 1 ? 'arrow down' : 'hidden'}
-                            onClick={() => setGameConfiguration({ numDecks: numDecks - 1, findAFriend })}
+                            onClick={() => setGameConfiguration({ numDecks: numDecks - 1, findAFriend, mustPlay5, mustPlay10, mustPlayK })}
                         />
                         {`${numDecks} ${numDecks > 1 ? 'decks' : 'deck'}`}
                     </div>
@@ -158,9 +162,33 @@ export class RoundStartPanel extends React.Component {
                         <input
                             type="checkbox"
                             checked={findAFriend}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend: !findAFriend })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend: !findAFriend, mustPlay5, mustPlay10, mustPlayK })}
                         />
                         {"Find a friend mode"}
+                    </div>
+                    <div>
+                        <input
+                            type="checkbox"
+                            checked={mustPlay5}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5: !mustPlay5, mustPlay10, mustPlayK })}
+                        />
+                        {"Must play rank 5"}
+                    </div>
+                    <div>
+                        <input
+                            type="checkbox"
+                            checked={mustPlay10}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10: !mustPlay10, mustPlayK })}
+                        />
+                        {"Must play rank 10"}
+                    </div>
+                    <div>
+                        <input
+                            type="checkbox"
+                            checked={mustPlayK}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK: !mustPlayK })}
+                        />
+                        {"Must play rank K"}
                     </div>
                 </div>
                 <div

@@ -36,6 +36,9 @@ public class Game {
     // game configuration
     private int numDecks = 2;
     private boolean findAFriend = false;
+    private boolean mustPlay5 = false;
+    private boolean mustPlay10 = false;
+    private boolean mustPlayK = false;
 
     // constant over each round
     private int roundNumber = 0;
@@ -97,7 +100,8 @@ public class Game {
         if (status != GameStatus.START_ROUND)
             throw new IllegalStateException();
 
-        updatePlayerScore(playerId, increment ? 1 : -1);
+        // [EditByRan] the admin edits come with the default "declare win"
+        updatePlayerScore(playerId, increment ? 1 : -1, true);
     }
 
     public synchronized void setNumDecks(int numDecks) {
@@ -116,6 +120,19 @@ public class Game {
             throw new IllegalStateException();
 
         this.findAFriend = findAFriend;
+    }
+
+    // [EditByRan] Implement must-play-rank feature.
+    public synchronized void setMustPlay5(boolean mustPlay5) {
+        this.mustPlay5 = mustPlay5;
+    }
+
+    public synchronized void setMustPlay10(boolean mustPlay10) {
+        this.mustPlay10 = mustPlay10;
+    }
+
+    public synchronized void setMustPlayK(boolean mustPlayK) {
+        this.mustPlayK = mustPlayK;
     }
 
     public synchronized void startRound() {
@@ -556,25 +573,57 @@ public class Game {
         winningPlayerIds.clear();
         for (String playerId : playerIds)
             if (isDeclaringTeam.get(playerId) == doDeclarersWin) {
-                updatePlayerScore(playerId, scoreIncrease);
+                updatePlayerScore(playerId, scoreIncrease, doDeclarersWin);
                 winningPlayerIds.add(playerId);
             }
         status = GameStatus.START_ROUND;
     }
 
-    private void updatePlayerScore(String playerId, int scoreIncrease) {
-        int newScore = playerRankScores.get(playerId).ordinal() + scoreIncrease;
+    private void updatePlayerScore(String playerId, int scoreIncrease, boolean doDeclarersWin) {
+        // [EditByRan] if mustPlayX is True, the player cannot pass X except that he/she belongs to the declarer team and stands on X.
+        int oldScore = playerRankScores.get(playerId).ordinal();
+        int newScore = oldScore;
+        if (scoreIncrease <= 0){
+            newScore = playerRankScores.get(playerId).ordinal() + scoreIncrease;
+            newScore = (newScore < Card.Value.TWO.ordinal())? Card.Value.TWO.ordinal() : newScore;
+        }
+        else {
+            while (scoreIncrease > 0){
+                // [EditByRan] check for non-declarers is before upgrade
+                if (mustPlay5 && !doDeclarersWin && newScore == Card.Value.FIVE.ordinal())
+                        break;
+                if (mustPlay10 && !doDeclarersWin && newScore == Card.Value.TEN.ordinal())
+                        break;
+                if (mustPlayK && !doDeclarersWin && newScore == Card.Value.KING.ordinal())
+                        break;
 
-        // [EditByRan] if someone exceeds ACE, continue by connecting TWO after ACE
-        while (newScore > Card.Value.ACE.ordinal())
-            newScore -= 13;
+                // [EditByRan] if someone exceeds ACE, continue by connecting TWO after ACE
+                newScore = (newScore == Card.Value.ACE.ordinal()) ? Card.Value.TWO.ordinal() : newScore + 1;
 
-        if (newScore > Card.Value.ACE.ordinal())
-            playerRankScores.put(playerId, Card.Value.ACE);
-        else if (newScore < Card.Value.TWO.ordinal())
-            playerRankScores.put(playerId, Card.Value.TWO);
-        else
-            playerRankScores.put(playerId, Card.Value.values()[newScore]);
+                // [EditByRan] check for declarers is after upgrade
+                if (mustPlay5 && doDeclarersWin && newScore == Card.Value.FIVE.ordinal())
+                        break;
+                if (mustPlay10 && doDeclarersWin && newScore == Card.Value.TEN.ordinal())
+                        break;
+                if (mustPlayK && doDeclarersWin && newScore == Card.Value.KING.ordinal())
+                        break;
+                scoreIncrease -= 1;
+            }
+        }
+        System.out.println("updatePlayerScore(). Print oldScore, newScore, scoreIncrease, doDeclarersWin");
+        System.out.println(oldScore);
+        System.out.println(newScore);
+        System.out.println(scoreIncrease);
+        System.out.println(doDeclarersWin);
+        System.out.println("");
+
+        playerRankScores.put(playerId, Card.Value.values()[newScore]);
+        // if (newScore > Card.Value.ACE.ordinal())
+        //    playerRankScores.put(playerId, Card.Value.ACE);
+        // else if (newScore < Card.Value.TWO.ordinal())
+        //     playerRankScores.put(playerId, Card.Value.TWO);
+        // else
+        //    playerRankScores.put(playerId, Card.Value.values()[newScore]);
     }
 
     public Card getCurrentTrump() {
@@ -835,11 +884,6 @@ public class Game {
             .map(Component::getShape)
             .sorted(Comparator.<Shape, Integer>comparing(shape -> shape.getWidth() * shape.getHeight()).reversed())
             .collect(Collectors.toList());
-
-        System.out.println("hasCoveringShape. myShapes, otherShapes ="); 
-        System.out.println(myShapes);
-        System.out.println(otherShapes);
-        
         for (Shape otherShape : otherShapes) {
             // For each shape in the other play, find a component of my play that "covers" it (has at least that width
             // and height), and then remove the relevant cards. This is a greedy algorithm that isn't guaranteed to be
@@ -847,9 +891,6 @@ public class Game {
             // play's largest components.
             boolean found = false;
             for (Shape myShape : myShapes) {
-                System.out.println("hasCoveringShape::in_for(). otherShape, myShape"); 
-                System.out.println(otherShape);
-                System.out.println(myShape);
                 if (myShape.getWidth() >= otherShape.getWidth() && myShape.getHeight() >= otherShape.getHeight()) {
                     myShapes.remove(myShape);
                     if (myShape.getHeight() > otherShape.getHeight())
@@ -862,9 +903,6 @@ public class Game {
             }
             if (!found)
                 return false;
-            System.out.println("hasCoveringShape::in_for(). found = True, print otherShape"); 
-            System.out.println(otherShape); 
-            System.out.println(""); 
         }
         return myShapes.isEmpty();
     }

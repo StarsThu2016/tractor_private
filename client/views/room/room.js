@@ -46,6 +46,10 @@ export class Room extends React.Component {
       playerIds: [], // PlayerId[]
       numDecks: 2, // integer
       findAFriend: false, // boolean
+      // [EditByRan] Implement must-play-rank feature.
+      mustPlay5: false, // boolean
+      mustPlay10: false, // boolean
+      mustPlayK: false, // boolean
       kittySize: 8, // integer
       roundNumber: undefined, // integer
       starterPlayerIndex: undefined, // integer
@@ -246,6 +250,7 @@ export class Room extends React.Component {
     );
   }
 
+  // [EditByRan] Implement must-play-rank feature.
   renderRoundStartPanel() {
     const {
       aiControllers,
@@ -257,11 +262,15 @@ export class Room extends React.Component {
       playerIds,
       numDecks,
       findAFriend,
+      mustPlay5,
+      mustPlay10,
+      mustPlayK,
       playerRankScores,
       winningPlayerIds,
       status,
     } = this.state;
     if (status === 'START_ROUND') {
+      // [EditByRan] Implement must-play-rank feature.
       return <RoundStartPanel
         aiControllers={aiControllers}
         humanControllers={humanControllers}
@@ -272,6 +281,9 @@ export class Room extends React.Component {
         playerIds={playerIds}
         numDecks={numDecks}
         findAFriend={findAFriend}
+        mustPlay5={mustPlay5}
+        mustPlay10={mustPlay10}
+        mustPlayK={mustPlayK}
         playerRankScores={playerRankScores}
         winningPlayerIds={winningPlayerIds}
         setPlayerOrder={playerIds => this.connection.send({ PLAYER_ORDER: { playerIds }})}
@@ -313,28 +325,37 @@ export class Room extends React.Component {
     />;
   }
 
+  // [EditByRan] Implement must-play-rank feature.
   renderGameInfo() {
-    const {playerNames, myPlayerId, playerIds, numDecks, findAFriend, playerRankScores, status} = this.state;
+    const {playerNames, myPlayerId, playerIds, numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, playerRankScores, status} = this.state;
     if (status === 'START_ROUND') {
       return; // all info is already shown in the round start panel
     }
+    // [EditByRan] Implement must-play-rank feature.
     return <GameInfoPanel
       playerNames={playerNames}
       myPlayerId={myPlayerId}
       playerIds={playerIds}
       numDecks={numDecks}
       findAFriend={findAFriend}
+      mustPlay5={mustPlay5}
+      mustPlay10={mustPlay10}
+      mustPlayK={mustPlayK}
       playerRankScores={playerRankScores}
       status={status}
     />;
   }
 
+  // [EditByRan] Implement must-play-rank feature.
   renderPlayerNames() {
     const {
       playerNames,
       myPlayerId,
       playerIds,
       findAFriend,
+      mustPlay5,
+      mustPlay10,
+      mustPlayK,
       status,
       currentPlayerIndex,
       isDeclaringTeam,
@@ -343,6 +364,7 @@ export class Room extends React.Component {
     if (status === 'START_ROUND') {
       return;
     }
+    // [EditByRan] Implement must-play-rank feature.
     return playerIds.map(playerId => {
       return <PlayerArea
         key={`playerName${playerId}`}
@@ -358,6 +380,9 @@ export class Room extends React.Component {
           playerNames={playerNames}
           playerIds={playerIds}
           findAFriend={findAFriend}
+          mustPlay5={mustPlay5}
+          mustPlay10={mustPlay10}
+          mustPlayK={mustPlayK}
           status={status}
           currentPlayerIndex={currentPlayerIndex}
           isDeclaringTeam={isDeclaringTeam}

@@ -4,10 +4,11 @@
 * Compensate: give a 10/15 credit points to the non-declare team (find a friend mode only), when there are 4/6/8 players in total.
 * Boost: 20/30/40 points per rank.
 * No-cap: if a player's rank exceeds A, then continues with 2.
+* Must-play: support an optional must-play feature on rank 5, 10, K.
 
 ## Ran's patch to the bugs or modifications
 * Patch 1: if the first player makes a special play, e.g. spades AK, the following player cannot cover by spades 99.
-* Patch 2: if the first player makes a special play with singles and the following player covers, the rank of the hand is determined by the max of singles.
+* Patch 2: if the first player makes a special play with singles and the following players cover by TRUMP, the rank of the hand is determined by the max of singles.
 * Patch 3: in a 3-deck game, if first player plays 5566, the following player with 2389777 must play 77.
 * Patch 4: if a special play fails, the player plays the smallest bad component.
 * Change the background music to "find a friend".
@@ -15,6 +16,7 @@
 ## Bugs and future improvements
 * First player plays QQQA, the follower with 99AA has to play both pairs, instead of just one. This is because both "99" and "AA" belong to the "must-play" set and the player cannot replace one of them by two singles.
 * On the UI, the cards should be sorted so that the color is "black-red-black-red".
+* Support "Chao-Di-Pi"
 
 ## Introduction
 Multiplayer online tractor game. Try it at https://orange-tractor.herokuapp.com/.

@@ -3,6 +3,8 @@
     position: relative;
     border: 1px solid black;
     margin: auto;
+    background-image: url("../../assets/images/pretty_background.png");
+    background-size: cover;
     background-color: #2c4d32;
     width: 1200px;
     height: 800px;

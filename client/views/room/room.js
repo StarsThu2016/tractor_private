@@ -230,24 +230,47 @@ export class Room extends React.Component {
   }
 
   renderGameArea() {
-    return (
-      <div className='game_area'>
-        {this.renderRoundStartPanel()}
-        {this.renderRoundInfo()}
-        {this.renderGameInfo()}
-        {this.renderPlayerNames()}
-        {this.renderNotifications()}
-        {this.renderFindAFriendPanel()}
-        {this.renderPlayerHands()}
-        {this.renderDeclaredCards()}
-        {this.renderBottomCards()}
-        {this.renderCurrentTrick()}
-        {this.renderSettings()}
-        {this.renderActionButton()}
-        {this.renderKitty()}
-        {this.renderLastTrickButton()}
-      </div>
-    );
+    var url = "";
+    if (this.state.status === 'START_ROUND') {
+      return (
+        <div className='game_area'>
+          {this.renderRoundStartPanel()}
+          {this.renderRoundInfo()}
+          {this.renderGameInfo()}
+          {this.renderPlayerNames()}
+          {this.renderNotifications()}
+          {this.renderFindAFriendPanel()}
+          {this.renderPlayerHands()}
+          {this.renderDeclaredCards()}
+          {this.renderBottomCards()}
+          {this.renderCurrentTrick()}
+          {this.renderSettings()}
+          {this.renderActionButton()}
+          {this.renderKitty()}
+          {this.renderLastTrickButton()}
+        </div>
+      );
+    }
+    else {
+      return (
+        <div className='game_area' style={{'background-image': `url(${url})`}}>
+          {this.renderRoundStartPanel()}
+          {this.renderRoundInfo()}
+          {this.renderGameInfo()}
+          {this.renderPlayerNames()}
+          {this.renderNotifications()}
+          {this.renderFindAFriendPanel()}
+          {this.renderPlayerHands()}
+          {this.renderDeclaredCards()}
+          {this.renderBottomCards()}
+          {this.renderCurrentTrick()}
+          {this.renderSettings()}
+          {this.renderActionButton()}
+          {this.renderKitty()}
+          {this.renderLastTrickButton()}
+        </div>
+      );
+    }
   }
 
   // [EditByRan] Implement must-play-rank feature.

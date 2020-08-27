@@ -27,7 +27,9 @@ export class GameInfoPanel extends React.Component {
                 <div>
                     {`${numDecks} ${numDecks > 1 ? 'decks' : 'deck'}`}
                     {findAFriend ? ' · find-a-friend' : undefined}
-                    {mustPlay5 || mustPlay10 || mustPlayK ? ' · must play' : undefined}
+                </div>
+                <div>
+                    {mustPlay5 || mustPlay10 || mustPlayK ? 'Must play' : undefined}
                     {mustPlay5 ? ' 5' : undefined}
                     {mustPlay10 ? ' 10' : undefined}
                     {mustPlayK ? ' K' : undefined}

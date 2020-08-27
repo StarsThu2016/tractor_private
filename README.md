@@ -12,6 +12,7 @@
 * Patch 3: in a 3-deck game, if first player plays 5566, the following player with 2389777 must play 77.
 * Patch 4: if a special play fails, the player plays the smallest bad component.
 * Change the background music to "find a friend".
+* Make the background prettier.
 
 ## Bugs and future improvements
 * First player plays QQQA, the follower with 99AA has to play both pairs, instead of just one. This is because both "99" and "AA" belong to the "must-play" set and the player cannot replace one of them by two singles.

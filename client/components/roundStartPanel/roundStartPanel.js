@@ -20,8 +20,9 @@ export class RoundStartPanel extends React.Component {
         }
     }
 
+    // [EditByRan] Implement must-play-rank feature.
+    // [EditByRan] Implement the "Chao-Di-Pi" feature.
     render() {
-        // [EditByRan] Implement must-play-rank feature.
         const {
             aiControllers,
             humanControllers,
@@ -35,6 +36,7 @@ export class RoundStartPanel extends React.Component {
             mustPlay5,
             mustPlay10,
             mustPlayK,
+            chaoDiPi,
             playerRankScores,
             winningPlayerIds,
             setPlayerOrder, // PlayerId[] => void
@@ -150,11 +152,11 @@ export class RoundStartPanel extends React.Component {
                     <div>
                         <i
                             className={numDecks < 10 ? 'arrow up' : 'hidden'}
-                            onClick={() => setGameConfiguration({ numDecks: numDecks + 1, findAFriend, mustPlay5, mustPlay10, mustPlayK })}
+                            onClick={() => setGameConfiguration({ numDecks: numDecks + 1, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi })}
                         />
                         <i
                             className={numDecks > 1 ? 'arrow down' : 'hidden'}
-                            onClick={() => setGameConfiguration({ numDecks: numDecks - 1, findAFriend, mustPlay5, mustPlay10, mustPlayK })}
+                            onClick={() => setGameConfiguration({ numDecks: numDecks - 1, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi })}
                         />
                         {`${numDecks} ${numDecks > 1 ? 'decks' : 'deck'}`}
                     </div>
@@ -162,30 +164,36 @@ export class RoundStartPanel extends React.Component {
                         <input
                             type="checkbox"
                             checked={findAFriend}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend: !findAFriend, mustPlay5, mustPlay10, mustPlayK })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend: !findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi })}
                         />
                         {"Find a friend mode"}
+                        <input
+                            type="checkbox"
+                            checked={chaoDiPi}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi: !chaoDiPi })}
+                        />
+                        {"Chao-Di-Pi"}
                     </div>
                     <div>
                         <input
                             type="checkbox"
                             checked={mustPlay5}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5: !mustPlay5, mustPlay10, mustPlayK })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5: !mustPlay5, mustPlay10, mustPlayK, chaoDiPi })}
                         />
                         {"Must play rank 5 "}
                         <input
                             type="checkbox"
                             checked={mustPlay10}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10: !mustPlay10, mustPlayK })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10: !mustPlay10, mustPlayK, chaoDiPi })}
                         />
                         {"rank 10 "}
                         <input
                             type="checkbox"
                             checked={mustPlayK}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK: !mustPlayK })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK: !mustPlayK, chaoDiPi })}
                         />
-                        {"rank K"}
-                    </div>
+                        {" rank K"}
+                    </div> 
                 </div>
                 <div
                     className={iAmReadyForPlay ?

@@ -9,6 +9,7 @@ import './gameInfoPanel.css';
 export class GameInfoPanel extends React.Component {
 
     // [EditByRan] Implement must-play-rank feature.
+    // [EditByRan] Implement the "Chao-Di-Pi" feature.
     render() {
         const {
             playerNames,
@@ -19,6 +20,7 @@ export class GameInfoPanel extends React.Component {
             mustPlay5,
             mustPlay10,
             mustPlayK,
+            chaoDiPi,
             playerRankScores,
         } = this.props;
 
@@ -26,7 +28,8 @@ export class GameInfoPanel extends React.Component {
             <div className='game_info_panel'>
                 <div>
                     {`${numDecks} ${numDecks > 1 ? 'decks' : 'deck'}`}
-                    {findAFriend ? ' · find-a-friend' : undefined}
+                    {findAFriend ? ' · FAF' : undefined}
+                    {chaoDiPi ? ' · CDP' : undefined}
                 </div>
                 <div>
                     {mustPlay5 || mustPlay10 || mustPlayK ? 'Must play' : undefined}

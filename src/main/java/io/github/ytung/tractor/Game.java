@@ -21,6 +21,7 @@ import com.google.common.collect.TreeMultiset;
 import io.github.ytung.tractor.Cards.Grouping;
 import io.github.ytung.tractor.api.Card;
 import io.github.ytung.tractor.api.Card.Suit;
+import io.github.ytung.tractor.api.Card.Value;
 import io.github.ytung.tractor.api.FindAFriendDeclaration;
 import io.github.ytung.tractor.api.FindAFriendDeclaration.Declaration;
 import io.github.ytung.tractor.api.GameStatus;
@@ -34,11 +35,15 @@ public class Game {
     private List<String> playerIds = new ArrayList<>();
 
     // game configuration
+    // [EditByRan] Implement must-play-rank feature.
+    // [EditByRan] Implement the "Chao-Di-Pi" feature.
     private int numDecks = 2;
     private boolean findAFriend = false;
     private boolean mustPlay5 = false;
     private boolean mustPlay10 = false;
     private boolean mustPlayK = false;
+    private boolean chaoDiPi = false;
+    private int kittyOwnerIndex;
 
     // constant over each round
     private int roundNumber = 0;
@@ -135,6 +140,11 @@ public class Game {
         this.mustPlayK = mustPlayK;
     }
 
+    // [EditByRan] Implement the "Chao-Di-Pi" feature.
+    public synchronized void setChaoDiPi(boolean chaoDiPi) {
+        this.chaoDiPi = chaoDiPi;
+    }
+
     public synchronized void startRound() {
         if (status != GameStatus.START_ROUND)
             throw new IllegalStateException();
@@ -184,14 +194,21 @@ public class Game {
         playerHands.forEach((otherPlayerId, otherCardIds) -> sortCards(otherCardIds));
 
         // if this is the first round, then the person who declares is the starter
-        if (roundNumber == 0) {
+        // [EditByRan] only if in the first declare phase.
+        if (roundNumber == 0 && (status == GameStatus.DRAW || status == GameStatus.DRAW_KITTY)) {
             starterPlayerIndex = playerIds.indexOf(playerId);
             setIsDeclaringTeam();
         }
+
+        // [EditByRan] memorize who makes the kitty so that to prevent he/she to Chao-Di-Pi right away.
+        if (status == GameStatus.SPECIAL_DRAW_KITTY)
+            kittyOwnerIndex = playerIds.indexOf(playerId);
+        else
+            kittyOwnerIndex = starterPlayerIndex;
     }
 
     private void verifyCanDeclare(Play play) throws InvalidDeclareException {
-        if (status != GameStatus.DRAW && status != GameStatus.DRAW_KITTY)
+        if (status != GameStatus.DRAW && status != GameStatus.DRAW_KITTY && status != GameStatus.SPECIAL_DRAW_KITTY)
             throw new InvalidDeclareException("You can no longer declare.");
         if (play.getCardIds().isEmpty())
             throw new InvalidDeclareException("You must declare at least one card.");
@@ -206,28 +223,48 @@ public class Game {
             throw new InvalidDeclareException("You can only declare the current trump value.");
         if (card.getSuit() == Card.Suit.JOKER && play.getCardIds().size() == 1)
             throw new InvalidDeclareException("You cannot declare a single joker.");
+        if (play.getCardIds().size() == 1 && status == GameStatus.SPECIAL_DRAW_KITTY)
+            throw new InvalidDeclareException("In the Chao-Di-Pi phase, you cannot declare a single card.");
 
         if (declaredCards.isEmpty())
             return;
 
+        // [EditByRan] The new declare rules including "Chao-Di-Pi" features.
         Play lastDeclaredPlay = declaredCards.get(declaredCards.size() - 1);
         Suit lastDeclaredSuit = cardsById.get(lastDeclaredPlay.getCardIds().get(0)).getSuit();
-        if (lastDeclaredPlay.getPlayerId().equals(play.getPlayerId())) {
+        Value lastDeclaredValue = cardsById.get(lastDeclaredPlay.getCardIds().get(0)).getValue();
+        if (lastDeclaredPlay.getPlayerId().equals(play.getPlayerId()) && (status == GameStatus.DRAW || status == GameStatus.DRAW_KITTY)) {
             // same player is only allowed to strengthen the declared suit
             if (card.getSuit() != lastDeclaredSuit)
                 throw new InvalidDeclareException("You can only strengthen your declare.");
             if (play.getCardIds().size() <= lastDeclaredPlay.getCardIds().size())
                 throw new InvalidDeclareException("You can only strengthen your declare.");
-        } else {
+        } else if (lastDeclaredPlay.getPlayerId().equals(play.getPlayerId()))
+            throw new InvalidDeclareException("You cannot strengthen your declare in the Chao-Di-Pi phase.");
+        else {
             // other players can only override
-            if (card.getSuit() == lastDeclaredSuit)
-                throw new InvalidDeclareException("You may not re-declare the current suit.");
             if (play.getCardIds().size() < lastDeclaredPlay.getCardIds().size())
                 throw new InvalidDeclareException("You must declare more cards than the last declare.");
-            if (play.getCardIds().size() > lastDeclaredPlay.getCardIds().size())
-                return;
-            if (play.getCardIds().size() == 1 || card.getSuit() != Card.Suit.JOKER || lastDeclaredSuit == Card.Suit.JOKER)
-                throw new InvalidDeclareException("You must declare more cards than the last declare.");
+            else if (play.getCardIds().size() == lastDeclaredPlay.getCardIds().size()){
+                if (card.getSuit() != Card.Suit.JOKER)
+                    throw new InvalidDeclareException("You must declare more cards than the last declare.");
+                else if (lastDeclaredSuit != Card.Suit.JOKER)
+                    return;
+                else { // Both joker
+                    if (lastDeclaredValue == Card.Value.SMALL_JOKER && card.getValue() == Card.Value.BIG_JOKER)
+                        return;
+                    else
+                        throw new InvalidDeclareException("You must declare more cards than the last declare.");
+                }
+            }
+            else  // (play.getCardIds().size() > lastDeclaredPlay.getCardIds().size())
+            {
+                if (lastDeclaredSuit != Card.Suit.JOKER && card.getSuit() != Card.Suit.JOKER && lastDeclaredSuit == card.getSuit())
+                    throw new InvalidDeclareException("You may not re-declare the current suit.");
+                else
+                    return;
+            }
+
         }
     }
 
@@ -256,13 +293,15 @@ public class Game {
     }
 
     public synchronized Play takeKitty() {
-        if (status != GameStatus.DRAW_KITTY && status != GameStatus.EXPOSE_BOTTOM_CARDS)
+        // [EditByRan] Implement the "Chao-Di-Pi" feature.
+        if (status != GameStatus.SPECIAL_DRAW_KITTY && status != GameStatus.DRAW_KITTY && status != GameStatus.EXPOSE_BOTTOM_CARDS)
             return null;
-
-        status = GameStatus.MAKE_KITTY;
-        currentPlayerIndex = starterPlayerIndex;
+        GameStatus oldstatus = status;
+        status = (oldstatus == GameStatus.DRAW_KITTY) ? GameStatus.MAKE_KITTY : GameStatus.SPECIAL_MAKE_KITTY;
+        System.out.println("@takeKitty(): status = " + status + ", oldstatus = " + oldstatus);
+        currentPlayerIndex = (oldstatus == GameStatus.DRAW_KITTY) ? starterPlayerIndex : playerIds.indexOf(declaredCards.get(declaredCards.size() - 1).getPlayerId());
         String playerId = playerIds.get(currentPlayerIndex);
-        List<Integer> cardIds = new ArrayList<>(deck);
+        List<Integer> cardIds = (oldstatus == GameStatus.DRAW_KITTY) ? new ArrayList<>(deck) : new ArrayList<>(kitty);
         playerHands.get(playerIds.get(currentPlayerIndex)).addAll(cardIds);
         sortCards(playerHands.get(playerIds.get(currentPlayerIndex)));
         deck.clear();
@@ -272,7 +311,11 @@ public class Game {
     public synchronized void makeKitty(String playerId, List<Integer> cardIds) throws InvalidKittyException {
         sortCards(cardIds);
         Play play = new Play(playerId, cardIds);
-        if (status != GameStatus.MAKE_KITTY || !kitty.isEmpty())
+        System.out.println("@makeKitty(): status = " + status);
+        System.out.println("@makeKitty(): playerId = " + playerId);
+
+        // [EditByRan] Remove the check on the kitty
+        if ((status != GameStatus.MAKE_KITTY && status != GameStatus.SPECIAL_MAKE_KITTY))
             throw new InvalidKittyException("You cannot make kitty now");
         if (!play.getPlayerId().equals(playerIds.get(currentPlayerIndex)))
             throw new InvalidKittyException("You cannot make kitty");
@@ -280,10 +323,38 @@ public class Game {
             throw new InvalidKittyException("The kitty has to have " + getKittySize() + " cards");
         if (!isPlayable(play))
             throw new InvalidKittyException("Unknown error");
-        status = findAFriend ? GameStatus.DECLARE_FRIEND : GameStatus.PLAY;
+
+        // [EditByRan] Addition rule: you cannot insert the declarations into the ketty, if you are not the starter.
+        if (status == GameStatus.SPECIAL_MAKE_KITTY && findAFriend && !playerId.equals(playerIds.get(starterPlayerIndex))){
+            for (Declaration declaration : findAFriendDeclaration.getDeclarations()) {
+                Card card1 = new Card(declaration.getValue(), declaration.getSuit());
+                for (int cardId : play.getCardIds()){
+                    Card card2 = cardsById.get(cardId);
+                    if (card1.value == card2.value && card1.suit == card2.suit)
+                        throw new InvalidKittyException("The kitty should not include what the starter declares for friends");
+                }
+            }
+        }
+
+        if (status == GameStatus.MAKE_KITTY && findAFriend)
+            status = GameStatus.DECLARE_FRIEND;
+        else if (status == GameStatus.MAKE_KITTY && chaoDiPi)
+            status = GameStatus.SPECIAL_DRAW_KITTY;
+        else if (status == GameStatus.MAKE_KITTY)
+            status = GameStatus.PLAY;
+        else if (status == GameStatus.SPECIAL_MAKE_KITTY)
+            status = GameStatus.SPECIAL_DRAW_KITTY;
+
         kitty = play.getCardIds();
         playerHands.get(playerId).removeAll(cardIds);
         currentTrick = new Trick(play.getPlayerId());
+    }
+
+    // [EditByRan] "Chao-Di-Pi" feature: start play function after nobody choose to override.
+    public synchronized void startPlay(){
+        System.out.println("startPlay, status = GameStatus.PLAY");
+        status = GameStatus.PLAY;
+        currentPlayerIndex = starterPlayerIndex;
     }
 
     public synchronized void makeFindAFriendDeclaration(String playerId, FindAFriendDeclaration declarations)
@@ -321,7 +392,7 @@ public class Game {
             }
         }
 
-        status = GameStatus.PLAY;
+        status = (!chaoDiPi) ? GameStatus.PLAY : GameStatus.SPECIAL_DRAW_KITTY;
         findAFriendDeclaration = declarations;
     }
 

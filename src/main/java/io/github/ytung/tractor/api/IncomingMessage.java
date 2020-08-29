@@ -104,6 +104,7 @@ public interface IncomingMessage {
     }
 
     // [EditByRan] Implement must-play-rank feature.
+    // [EditByRan] Implement the "Chao-Di-Pi" feature.
     @Data
     @NoArgsConstructor
     public static class GameConfigurationRequest implements IncomingMessage {
@@ -113,6 +114,7 @@ public interface IncomingMessage {
         private boolean mustPlay5;
         private boolean mustPlay10;
         private boolean mustPlayK;
+        private boolean chaoDiPi;
     }
 
     @Data

@@ -66,6 +66,7 @@ import io.github.ytung.tractor.api.OutgoingMessage.InvalidAction;
 import io.github.ytung.tractor.api.OutgoingMessage.InvalidSpecialPlay;
 import io.github.ytung.tractor.api.OutgoingMessage.LeaveRoom;
 import io.github.ytung.tractor.api.OutgoingMessage.MakeKitty;
+import io.github.ytung.tractor.api.OutgoingMessage.StartPlay;
 import io.github.ytung.tractor.api.OutgoingMessage.PlayMessage;
 import io.github.ytung.tractor.api.OutgoingMessage.ReadyForPlay;
 import io.github.ytung.tractor.api.OutgoingMessage.ReconnectMessage;
@@ -123,6 +124,7 @@ public class TractorRoom {
         }
 
         // [EditByRan] Implement must-play-rank feature.
+        // [EditByRan] Implement the "Chao-Di-Pi" feature.
         r.write(JacksonEncoder.INSTANCE.encode(new FullRoomState(
             game.getPlayerIds(),
             game.getNumDecks(),
@@ -130,6 +132,8 @@ public class TractorRoom {
             game.isMustPlay5(),
             game.isMustPlay10(),
             game.isMustPlayK(),
+            game.isChaoDiPi(),
+            game.getKittyOwnerIndex(),
             game.getRoundNumber(),
             game.getStarterPlayerIndex(),
             game.getPlayerRankScores(),
@@ -260,13 +264,15 @@ public class TractorRoom {
             }
         }
 
-        // [EditByRan] Implement must-play-rank feature.
+        // [EditByRan] Implement the must-play-rank feature.
+        // [EditByRan] Implement the Chao-Di-Pi feature.
         if (message instanceof GameConfigurationRequest) {
             game.setNumDecks(((GameConfigurationRequest) message).getNumDecks());
             game.setFindAFriend(((GameConfigurationRequest) message).isFindAFriend());
             game.setMustPlay5(((GameConfigurationRequest) message).isMustPlay5());
             game.setMustPlay10(((GameConfigurationRequest) message).isMustPlay10());
             game.setMustPlayK(((GameConfigurationRequest) message).isMustPlayK());
+            game.setChaoDiPi(((GameConfigurationRequest) message).isChaoDiPi());
             playerReadyForPlay.replaceAll((k, v) -> v=false);
             sendSync(broadcaster, new GameConfiguration(
                 game.getNumDecks(),
@@ -274,6 +280,7 @@ public class TractorRoom {
                 game.isMustPlay5(),
                 game.isMustPlay10(),
                 game.isMustPlayK(),
+                game.isChaoDiPi(),
                 game.getKittySize(),
                 playerReadyForPlay));
         }
@@ -285,14 +292,20 @@ public class TractorRoom {
                 Map<Integer, Card> cardsById = game.getCardsById();
                 sendSync(broadcaster, new CardInfo(Maps.toMap(cardIds, cardsById::get)));
                 playerReadyForPlay.replaceAll((k, v) -> v=false);
+                // [EditByRan] Chao-Di-Pi feature: sync the KittyOwnerIndex
                 sendSync(broadcaster, new Declare(
                     playerId,
+                    game.getKittyOwnerIndex(),
                     game.getStarterPlayerIndex(),
                     game.getIsDeclaringTeam(),
                     game.getPlayerHands(),
                     game.getDeclaredCards(),
                     game.getCurrentTrump(),
                     playerReadyForPlay));
+                if (game.getStatus() == GameStatus.SPECIAL_DRAW_KITTY){
+                    // [EditByRan] Chao-Di-Pi phase
+                    dealKitty(broadcaster);
+                }
             } catch (InvalidDeclareException e) {
                 sendSync(playerId, broadcaster, new InvalidAction(e.getMessage()));
             }
@@ -306,6 +319,14 @@ public class TractorRoom {
                     startRound(broadcaster);
                 else if (game.getStatus() == GameStatus.DRAW_KITTY)
                     maybeExposeBottomCardsAndDealKitty(broadcaster);
+                else if (game.getStatus() == GameStatus.SPECIAL_DRAW_KITTY){
+                    // [EditByRan] Chao-Di-Pi
+                    game.startPlay();
+                    sendSync(broadcaster, new StartPlay(
+                        game.getStatus(),
+                        game.getStarterPlayerIndex())
+                    );
+                }
                 else
                     throw new IllegalStateException();
                 playerReadyForPlay.replaceAll((k, v) -> v=false); // reset for next time
@@ -510,6 +531,8 @@ public class TractorRoom {
         }
     }
 
+    // [EditByRan] Implement must-play-rank feature.
+    // [EditByRan] Implement the "Chao-Di-Pi" feature.
     private void broadcastUpdatePlayers(Broadcaster broadcaster) {
         sendSync(broadcaster, new UpdatePlayers(
             game.getPlayerIds(),
@@ -518,6 +541,7 @@ public class TractorRoom {
             game.isMustPlay5(),
             game.isMustPlay10(),
             game.isMustPlayK(),
+            game.isChaoDiPi(),
             game.getKittySize(),
             aiControllers.keySet(),
             humanControllers.keySet(),

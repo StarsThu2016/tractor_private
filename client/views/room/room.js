@@ -46,10 +46,13 @@ export class Room extends React.Component {
       playerIds: [], // PlayerId[]
       numDecks: 2, // integer
       findAFriend: false, // boolean
-      // [EditByRan] Implement must-play-rank feature.
+      // [EditByRan] Implement the must-play-rank feature.
+      // [EditByRan] Implement the "Chao-Di-Pi" feature.
       mustPlay5: false, // boolean
       mustPlay10: false, // boolean
       mustPlayK: false, // boolean
+      chaoDiPi: false,  // boolean
+      kittyOwnerIndex: undefined, // integer
       kittySize: 8, // integer
       roundNumber: undefined, // integer
       starterPlayerIndex: undefined, // integer
@@ -141,6 +144,8 @@ export class Room extends React.Component {
             if (json.MAKE_KITTY.status === 'PLAY') {
               this.audio.slowlyStopBackground();
             }
+          } else if (json.START_PLAY) { // [EditByRan] Implement the "Chao-Di-Pi" feature.
+            this.setState(json.START_PLAY);
           } else if (json.PLAY) {
             this.setState(json.PLAY);
             if (status === 'PLAY' && playerIds[json.PLAY.currentPlayerIndex] === myPlayerId) {
@@ -273,7 +278,8 @@ export class Room extends React.Component {
     }
   }
 
-  // [EditByRan] Implement must-play-rank feature.
+  // [EditByRan] Implement the must-play-rank feature.
+  // [EditByRan] Implement the "Chao-Di-Pi" feature.
   renderRoundStartPanel() {
     const {
       aiControllers,
@@ -288,12 +294,14 @@ export class Room extends React.Component {
       mustPlay5,
       mustPlay10,
       mustPlayK,
+      chaoDiPi,
       playerRankScores,
       winningPlayerIds,
       status,
     } = this.state;
     if (status === 'START_ROUND') {
-      // [EditByRan] Implement must-play-rank feature.
+      // [EditByRan] Implement the must-play-rank feature.
+      // [EditByRan] Implement the "Chao-Di-Pi" feature.
       return <RoundStartPanel
         aiControllers={aiControllers}
         humanControllers={humanControllers}
@@ -307,6 +315,7 @@ export class Room extends React.Component {
         mustPlay5={mustPlay5}
         mustPlay10={mustPlay10}
         mustPlayK={mustPlayK}
+        chaoDiPi={chaoDiPi}
         playerRankScores={playerRankScores}
         winningPlayerIds={winningPlayerIds}
         setPlayerOrder={playerIds => this.connection.send({ PLAYER_ORDER: { playerIds }})}
@@ -348,13 +357,15 @@ export class Room extends React.Component {
     />;
   }
 
-  // [EditByRan] Implement must-play-rank feature.
+  // [EditByRan] Implement the must-play-rank feature.
+  // [EditByRan] Implement the "Chao-Di-Pi" feature.
   renderGameInfo() {
-    const {playerNames, myPlayerId, playerIds, numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, playerRankScores, status} = this.state;
+    const {playerNames, myPlayerId, playerIds, numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi, playerRankScores, status} = this.state;
     if (status === 'START_ROUND') {
       return; // all info is already shown in the round start panel
     }
-    // [EditByRan] Implement must-play-rank feature.
+    // [EditByRan] Implement the must-play-rank feature.
+    // [EditByRan] Implement the "Chao-Di-Pi" feature.
     return <GameInfoPanel
       playerNames={playerNames}
       myPlayerId={myPlayerId}
@@ -364,12 +375,14 @@ export class Room extends React.Component {
       mustPlay5={mustPlay5}
       mustPlay10={mustPlay10}
       mustPlayK={mustPlayK}
+      chaoDiPi={chaoDiPi}
       playerRankScores={playerRankScores}
       status={status}
     />;
   }
 
-  // [EditByRan] Implement must-play-rank feature.
+  // [EditByRan] Implement the must-play-rank feature.
+  // [EditByRan] Implement the "Chao-Di-Pi" feature.
   renderPlayerNames() {
     const {
       playerNames,
@@ -379,6 +392,7 @@ export class Room extends React.Component {
       mustPlay5,
       mustPlay10,
       mustPlayK,
+      chaoDiPi,
       status,
       currentPlayerIndex,
       isDeclaringTeam,
@@ -387,7 +401,8 @@ export class Room extends React.Component {
     if (status === 'START_ROUND') {
       return;
     }
-    // [EditByRan] Implement must-play-rank feature.
+    // [EditByRan] Implement the must-play-rank feature.
+    // [EditByRan] Implement the "Chao-Di-Pi" feature.
     return playerIds.map(playerId => {
       return <PlayerArea
         key={`playerName${playerId}`}
@@ -406,6 +421,7 @@ export class Room extends React.Component {
           mustPlay5={mustPlay5}
           mustPlay10={mustPlay10}
           mustPlayK={mustPlayK}
+          chaoDiPi={chaoDiPi}
           status={status}
           currentPlayerIndex={currentPlayerIndex}
           isDeclaringTeam={isDeclaringTeam}
@@ -415,6 +431,7 @@ export class Room extends React.Component {
     });
   }
 
+  // [EditByRan] Add kittyOwnerIndex, declaredCards
   renderNotifications() {
     const {
       aiControllers,
@@ -427,7 +444,9 @@ export class Room extends React.Component {
       playerIds,
       kittySize,
       status,
+      kittyOwnerIndex,
       currentPlayerIndex,
+      declaredCards,
     } = this.state;
     if (!myPlayerId) {
       return <RejoinPanel
@@ -459,8 +478,21 @@ export class Room extends React.Component {
     if (!playerReadyForPlay[myPlayerId] && status === 'DRAW_KITTY') {
       return <div className='notification'>{"Select card(s) to declare, or click Pass"}</div>
     }
+
+    // [EditByRan] Chao-Di-Pi phase
+    if (!playerReadyForPlay[myPlayerId] && status === 'SPECIAL_DRAW_KITTY'){
+      // Two types of players are not allowed to declare: the KittyOwner, DeclaredCardsOwner
+      if ((declaredCards.length > 0 && declaredCards[declaredCards.length - 1].playerId === myPlayerId) ||
+          kittyOwnerIndex === myPlayerId) {
+        return <div className='notification'>{"You are not allowed to declare, please click Pass"}</div>
+      } else { // The player is allowed to declare
+        return <div className='notification'>{"Select 2+ card(s) to declare, or click Pass"}</div>
+      }
+    }
+
+    // [EditByRan] Implement the Chao-Di-Pi feature.
     const playerId = playerIds[currentPlayerIndex];
-    if (status === 'MAKE_KITTY') {
+    if (status === 'MAKE_KITTY' || status === 'SPECIAL_MAKE_KITTY') {
       if (playerId === myPlayerId) {
         return <div className='notification'>{`Select ${kittySize} cards to put in the kitty`}</div>
       } else {
@@ -613,6 +645,7 @@ export class Room extends React.Component {
     />;
   }
 
+  // [EditByRan] Add kittyOwnerIndex, declaredCards
   renderActionButton() {
     const {
       humanControllers,
@@ -620,6 +653,7 @@ export class Room extends React.Component {
       selectedCardIds,
       playerIds,
       kittySize,
+      kittyOwnerIndex,
       currentPlayerIndex,
       status,
       declaredCards,
@@ -644,7 +678,6 @@ export class Room extends React.Component {
         onClick={() => this.connection.send({ READY_FOR_PLAY: { ready: !iAmReadyForPlay } })}
       />;
     }
-
     if (status === 'DRAW' || (status === 'DRAW_KITTY' && !iAmReadyForPlay)) {
       return <ActionButton
         text='Declare'
@@ -663,11 +696,54 @@ export class Room extends React.Component {
       />;
     }
 
+    // [EditByRan] Chao-Di-Pi phase
+    if (status === 'SPECIAL_DRAW_KITTY'){
+      // Two types of players are not allowed to declare: the KittyOwner, DeclaredCardsOwner
+      if ((declaredCards.length > 0 && declaredCards[declaredCards.length - 1].playerId === myPlayerId) ||
+          kittyOwnerIndex === myPlayerId) {
+        return <ActionButton
+          text={`${iAmReadyForPlay ? 'Ready' : 'Pass'} (${numPlayersReadyForPlay}/${humanControllers.length})`}
+          clicked={iAmReadyForPlay}
+          onClick={() => this.connection.send({ READY_FOR_PLAY: { ready: !iAmReadyForPlay } })}
+        />;
+      } else { // The player is allowed to declare
+        if (selectedCardIdsList.length === 0 || iAmReadyForPlay){
+          // the player has already clicked the 'Pass' button OR nothing has been selected.
+          return <ActionButton
+            text={`${iAmReadyForPlay ? 'Ready' : 'Pass'} (${numPlayersReadyForPlay}/${humanControllers.length})`}
+            clicked={iAmReadyForPlay}
+            onClick={() => this.connection.send({ READY_FOR_PLAY: { ready: !iAmReadyForPlay } })}
+          />;
+        }
+        else { // selectedCardIdsList.length !== 0 || !iAmReadyForPlay
+          // the player has NOT clicked the 'Pass' button yet and selected something
+          return <ActionButton
+            text='Declare'
+            onClick={() => {
+              const cardIds = [...selectedCardIdsList];
+              this.connection.send({ DECLARE: { cardIds } });
+              this.setState({selectedCardIds: {}});
+              }
+            }
+          />;
+        }
+      }
+    }
+
     if (playerIds[currentPlayerIndex] !== myPlayerId) {
       return;
     }
 
     if (status === 'MAKE_KITTY' && kitty.length === 0) {
+      return <ActionButton
+        text='Make kitty'
+        onClick={selectedCardIdsList.length === kittySize ? () => {
+          this.connection.send({ MAKE_KITTY: { cardIds: selectedCardIdsList } });
+          this.setState({selectedCardIds: {}});
+        } : undefined}
+      />;
+    }
+    if (status === 'SPECIAL_MAKE_KITTY') {
       return <ActionButton
         text='Make kitty'
         onClick={selectedCardIdsList.length === kittySize ? () => {
@@ -687,13 +763,13 @@ export class Room extends React.Component {
     }
   }
 
+  // [EditByRan] Only the kittyOwnerIndex can view the kitty
   renderKitty() {
-    const { myPlayerId, playerIds, starterPlayerIndex, status, cardsById, kitty } = this.state;
-
+    const { myPlayerId, playerIds, kittyOwnerIndex, status, cardsById, kitty } = this.state;
     return <Kitty
       myPlayerId={myPlayerId}
       playerIds={playerIds}
-      starterPlayerIndex={starterPlayerIndex}
+      kittyOwnerIndex={kittyOwnerIndex}
       status={status}
       cardsById={cardsById}
       kitty={kitty}

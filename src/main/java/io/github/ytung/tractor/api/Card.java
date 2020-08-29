@@ -14,7 +14,8 @@ public class Card {
         SPADE, HEART, DIAMOND, CLUB, JOKER
     };
 
-    private final Value value;
+    // [EditByRan] change to public
+    public final Value value;
 
-    private final Suit suit;
+    public final Suit suit;
 }

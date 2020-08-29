@@ -28,6 +28,7 @@ import io.github.ytung.tractor.api.OutgoingMessage.InvalidSpecialPlay;
 import io.github.ytung.tractor.api.OutgoingMessage.JoinRoom;
 import io.github.ytung.tractor.api.OutgoingMessage.LeaveRoom;
 import io.github.ytung.tractor.api.OutgoingMessage.MakeKitty;
+import io.github.ytung.tractor.api.OutgoingMessage.StartPlay;
 import io.github.ytung.tractor.api.OutgoingMessage.PlayMessage;
 import io.github.ytung.tractor.api.OutgoingMessage.ReadyForPlay;
 import io.github.ytung.tractor.api.OutgoingMessage.ReconnectMessage;
@@ -55,6 +56,7 @@ import lombok.Data;
     @JsonSubTypes.Type(value = TakeKitty.class, name = "TAKE_KITTY"),
     @JsonSubTypes.Type(value = FindAFriendDeclarationMessage.class, name = "FRIEND_DECLARE"),
     @JsonSubTypes.Type(value = MakeKitty.class, name = "MAKE_KITTY"),
+    @JsonSubTypes.Type(value = StartPlay.class, name = "START_PLAY"),
     @JsonSubTypes.Type(value = ReadyForPlay.class, name = "READY_FOR_PLAY"),
     @JsonSubTypes.Type(value = PlayMessage.class, name = "PLAY"),
     @JsonSubTypes.Type(value = FinishTrick.class, name = "FINISH_TRICK"),
@@ -87,6 +89,7 @@ public interface OutgoingMessage {
     }
 
     // [EditByRan] Implement must-play-rank feature.
+    // [EditByRan] Implement the "Chao-Di-Pi" feature.
     @Data
     public static class FullRoomState implements OutgoingMessage {
 
@@ -97,6 +100,8 @@ public interface OutgoingMessage {
         private final boolean mustPlay5;
         private final boolean mustPlay10;
         private final boolean mustPlayK;
+        private final boolean chaoDiPi;
+        private final int kittyOwnerIndex;
 
         private final int roundNumber;
         private final int starterPlayerIndex;
@@ -134,6 +139,7 @@ public interface OutgoingMessage {
     }
 
     // [EditByRan] Implement must-play-rank feature.
+    // [EditByRan] Implement the "Chao-Di-Pi" feature.
     @Data
     public static class UpdatePlayers implements OutgoingMessage {
 
@@ -143,6 +149,7 @@ public interface OutgoingMessage {
         private final boolean mustPlay5;
         private final boolean mustPlay10;
         private final boolean mustPlayK;
+        private final boolean chaoDiPi;
         private final int kittySize;
         private final Set<String> aiControllers;
         private final Set<String> humanControllers;
@@ -151,6 +158,7 @@ public interface OutgoingMessage {
     }
 
     // [EditByRan] Implement must-play-rank feature.
+    // [EditByRan] Implement the "Chao-Di-Pi" feature.
     @Data
     public static class GameConfiguration implements OutgoingMessage {
 
@@ -159,6 +167,7 @@ public interface OutgoingMessage {
         private final boolean mustPlay5;
         private final boolean mustPlay10;
         private final boolean mustPlayK;
+        private final boolean chaoDiPi;
         private final int kittySize;
         private final Map<String, Boolean> playerReadyForPlay;
     }
@@ -223,6 +232,7 @@ public interface OutgoingMessage {
 
         private final String playerId;
 
+        private final int kittyOwnerIndex;
         private final int starterPlayerIndex;
 
         private final Map<String, Boolean> isDeclaringTeam;
@@ -252,6 +262,13 @@ public interface OutgoingMessage {
         private final List<Integer> kitty;
         private final Map<String, List<Integer>> playerHands;
         private final Trick currentTrick;
+    }
+
+    @Data
+    public static class StartPlay implements OutgoingMessage {
+
+        private final GameStatus status;
+        private final int currentPlayerIndex;
     }
 
     @Data

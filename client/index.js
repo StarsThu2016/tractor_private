@@ -21,7 +21,7 @@ function App() {
         render={({ match: { params: { roomCode } } }) => <Room roomCode={roomCode} leaveRoom={() => history.push('/')} />}
       />
     </Switch>
-    <GithubCorner href="https://github.com/ytung/tractor" />
+    <GithubCorner href="https://github.com/StarsThu2016/tractor_private" />
   </div>;
 }
 

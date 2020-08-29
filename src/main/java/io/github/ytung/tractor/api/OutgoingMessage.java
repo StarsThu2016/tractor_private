@@ -269,6 +269,7 @@ public interface OutgoingMessage {
 
         private final GameStatus status;
         private final int currentPlayerIndex;
+        private final Trick currentTrick;
     }
 
     @Data

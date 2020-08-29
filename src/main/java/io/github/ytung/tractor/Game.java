@@ -355,6 +355,7 @@ public class Game {
         System.out.println("startPlay, status = GameStatus.PLAY");
         status = GameStatus.PLAY;
         currentPlayerIndex = starterPlayerIndex;
+        currentTrick = new Trick(playerIds.get(starterPlayerIndex));
     }
 
     public synchronized void makeFindAFriendDeclaration(String playerId, FindAFriendDeclaration declarations)
@@ -451,7 +452,8 @@ public class Game {
         boolean didFriendJoin = updateFindAFriendDeclaration();
 
         if (currentTrick.getPlays().size() == playerIds.size()) {
-            currentPlayerIndex = -1;
+            // [EditByRan] BugFix
+            currentPlayerIndex = playerIds.indexOf(winningPlayerId(currentTrick));
             return new PlayResult(true, didFriendJoin, badComponent != null);
         } else {
             currentPlayerIndex = (currentPlayerIndex + 1) % playerIds.size();

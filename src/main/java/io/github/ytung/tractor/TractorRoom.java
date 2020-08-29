@@ -324,7 +324,8 @@ public class TractorRoom {
                     game.startPlay();
                     sendSync(broadcaster, new StartPlay(
                         game.getStatus(),
-                        game.getStarterPlayerIndex())
+                        game.getCurrentPlayerIndex(),
+                        game.getCurrentTrick())
                     );
                 }
                 else

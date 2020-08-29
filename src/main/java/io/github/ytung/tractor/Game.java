@@ -452,8 +452,7 @@ public class Game {
         boolean didFriendJoin = updateFindAFriendDeclaration();
 
         if (currentTrick.getPlays().size() == playerIds.size()) {
-            // [EditByRan] BugFix
-            currentPlayerIndex = playerIds.indexOf(winningPlayerId(currentTrick));
+            currentPlayerIndex = -1;
             return new PlayResult(true, didFriendJoin, badComponent != null);
         } else {
             currentPlayerIndex = (currentPlayerIndex + 1) % playerIds.size();

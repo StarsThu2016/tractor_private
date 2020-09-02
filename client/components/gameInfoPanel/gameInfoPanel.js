@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VALUES } from '../../lib/cards';
+import { VALUES, PLUS } from '../../lib/cards';
 import './gameInfoPanel.css';
 
 /**
@@ -22,6 +22,7 @@ export class GameInfoPanel extends React.Component {
             mustPlayK,
             chaoDiPi,
             playerRankScores,
+            playerRankCycles,
         } = this.props;
 
         return (
@@ -44,7 +45,7 @@ export class GameInfoPanel extends React.Component {
                         return <li
                             key={playerId}
                         >
-                            {name}{`: ${VALUES[playerRankScores[playerId]]}`}
+                            {name}{`: ${VALUES[playerRankScores[playerId]]}${PLUS[playerRankCycles[playerId]]}`}
                         </li>;
                     })}
                 </ul>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VALUES } from '../../lib/cards';
+import { VALUES, PLUS } from '../../lib/cards';
 import './roundStartPanel.css';
 
 /**
@@ -38,6 +38,7 @@ export class RoundStartPanel extends React.Component {
             mustPlayK,
             chaoDiPi,
             playerRankScores,
+            playerRankCycles,
             winningPlayerIds,
             setPlayerOrder, // PlayerId[] => void
             setName, // string => void
@@ -109,7 +110,7 @@ export class RoundStartPanel extends React.Component {
                             />);
                         }
 
-                        children.push(` (rank ${VALUES[playerRankScores[playerId]]})`);
+                        children.push(` (rank ${VALUES[playerRankScores[playerId]]}${PLUS[playerRankCycles[playerId]]})`);
                         if (isEditingPlayers) {
                             children.push(<span key='spacing' className='spacing' />);
                             if (playerRankScores[playerId] !== 'ACE') {

@@ -137,6 +137,7 @@ public class TractorRoom {
             game.getRoundNumber(),
             game.getStarterPlayerIndex(),
             game.getPlayerRankScores(),
+            game.getPlayerRankCycles(),
             game.getWinningPlayerIds(),
             game.getStatus(),
             game.getCurrentPlayerIndex(),
@@ -520,6 +521,7 @@ public class TractorRoom {
             game.getStarterPlayerIndex(),
             game.getWinningPlayerIds(),
             game.getPlayerRankScores(),
+            game.getPlayerRankCycles(),
             game.getStatus()));
         sendSync(broadcaster, new CardInfo(Maps.toMap(game.getKitty(), game.getCardsById()::get)));
 
@@ -538,6 +540,7 @@ public class TractorRoom {
         sendSync(broadcaster, new UpdatePlayers(
             game.getPlayerIds(),
             game.getPlayerRankScores(),
+            game.getPlayerRankCycles(),
             game.isFindAFriend(),
             game.isMustPlay5(),
             game.isMustPlay10(),

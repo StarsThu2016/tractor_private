@@ -57,6 +57,7 @@ export class Room extends React.Component {
       roundNumber: undefined, // integer
       starterPlayerIndex: undefined, // integer
       playerRankScores: {}, // {playerId: cardValue}
+      playerRankCycles: {}, // {playerId: integer}
       winningPlayerIds: [], // PlayerId[]
       status: 'START_ROUND', // GameStatus
       currentPlayerIndex: undefined, // integer
@@ -296,6 +297,7 @@ export class Room extends React.Component {
       mustPlayK,
       chaoDiPi,
       playerRankScores,
+      playerRankCycles,
       winningPlayerIds,
       status,
     } = this.state;
@@ -317,6 +319,7 @@ export class Room extends React.Component {
         mustPlayK={mustPlayK}
         chaoDiPi={chaoDiPi}
         playerRankScores={playerRankScores}
+        playerRankCycles={playerRankCycles}
         winningPlayerIds={winningPlayerIds}
         setPlayerOrder={playerIds => this.connection.send({ PLAYER_ORDER: { playerIds }})}
         setName={name => this.connection.send({ SET_NAME: { name }})}
@@ -360,7 +363,7 @@ export class Room extends React.Component {
   // [EditByRan] Implement the must-play-rank feature.
   // [EditByRan] Implement the "Chao-Di-Pi" feature.
   renderGameInfo() {
-    const {playerNames, myPlayerId, playerIds, numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi, playerRankScores, status} = this.state;
+    const {playerNames, myPlayerId, playerIds, numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi, playerRankScores, playerRankCycles, status} = this.state;
     if (status === 'START_ROUND') {
       return; // all info is already shown in the round start panel
     }
@@ -377,6 +380,7 @@ export class Room extends React.Component {
       mustPlayK={mustPlayK}
       chaoDiPi={chaoDiPi}
       playerRankScores={playerRankScores}
+      playerRankCycles={playerRankCycles}
       status={status}
     />;
   }

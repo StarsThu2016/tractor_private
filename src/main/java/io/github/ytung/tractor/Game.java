@@ -48,7 +48,9 @@ public class Game {
     // constant over each round
     private int roundNumber = 0;
     private int starterPlayerIndex = 0;
+    // [EditByRan] Remember the number of cycles
     private Map<String, Card.Value> playerRankScores = new HashMap<>();
+    private Map<String, Integer> playerRankCycles = new HashMap<>();
     private Set<String> winningPlayerIds = new HashSet<>();
 
     // round state
@@ -74,7 +76,9 @@ public class Game {
             return;
 
         playerIds.add(playerId);
+        // [EditByRan] Remember the number of cycles
         playerRankScores.put(playerId, Card.Value.TWO);
+        playerRankCycles.put(playerId, 0);
     }
 
     public synchronized void removePlayer(String playerId) {
@@ -82,7 +86,9 @@ public class Game {
             return;
 
         playerIds.remove(playerId);
+        // [EditByRan] Remember the number of cycles
         playerRankScores.remove(playerId);
+        playerRankCycles.remove(playerId);
 
         if (playerIds.size() < 4)
             findAFriend = false;
@@ -252,7 +258,7 @@ public class Game {
             // In the Chao-Di-Pi phase, the Starter is not able to Chao firstly, since he/she just takes the kitty
             if (status == GameStatus.SPECIAL_DRAW_KITTY && kittyOwnerIndex == playerIds.indexOf(play.getPlayerId()))
                 throw new InvalidDeclareException("You are the starter and just made the kitty, so you are not allowed to Cook now.");
-            
+
             // other players can only override
             if (play.getCardIds().size() < lastDeclaredPlay.getCardIds().size())
                 throw new InvalidDeclareException("You must declare more cards than the last declare.");
@@ -665,7 +671,9 @@ public class Game {
     private void updatePlayerScore(String playerId, int scoreIncrease, boolean doDeclarersWin) {
         // [EditByRan] if mustPlayX is True, the player cannot pass X except that he/she belongs to the declarer team and stands on X.
         int oldScore = playerRankScores.get(playerId).ordinal();
+        int oldCycle = playerRankCycles.get(playerId);
         int newScore = oldScore;
+        int newCycle = oldCycle;
         if (scoreIncrease <= 0){
             newScore = playerRankScores.get(playerId).ordinal() + scoreIncrease;
             newScore = (newScore < Card.Value.TWO.ordinal())? Card.Value.TWO.ordinal() : newScore;
@@ -681,7 +689,11 @@ public class Game {
                         break;
 
                 // [EditByRan] if someone exceeds ACE, continue by connecting TWO after ACE
-                newScore = (newScore == Card.Value.ACE.ordinal()) ? Card.Value.TWO.ordinal() : newScore + 1;
+                if (newScore == Card.Value.ACE.ordinal()){
+                    newScore = Card.Value.TWO.ordinal();
+                    newCycle = newCycle + 1;
+                } else
+                    newScore = newScore + 1;
 
                 // [EditByRan] check for declarers is after upgrade
                 if (mustPlay5 && doDeclarersWin && newScore == Card.Value.FIVE.ordinal())
@@ -694,6 +706,7 @@ public class Game {
             }
         }
         playerRankScores.put(playerId, Card.Value.values()[newScore]);
+        playerRankCycles.put(playerId, newCycle);
         // if (newScore > Card.Value.ACE.ordinal())
         //    playerRankScores.put(playerId, Card.Value.ACE);
         // else if (newScore < Card.Value.TWO.ordinal())

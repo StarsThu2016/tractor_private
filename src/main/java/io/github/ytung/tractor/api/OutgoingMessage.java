@@ -106,6 +106,7 @@ public interface OutgoingMessage {
         private final int roundNumber;
         private final int starterPlayerIndex;
         private final Map<String, Card.Value> playerRankScores;
+        private final Map<String, Integer> playerRankCycles;
         private final Set<String> winningPlayerIds;
 
         private final GameStatus status;
@@ -145,6 +146,7 @@ public interface OutgoingMessage {
 
         private final List<String> playerIds;
         private final Map<String, Card.Value> playerRankScores;
+        private final Map<String, Integer> playerRankCycles;
         private final boolean findAFriend;
         private final boolean mustPlay5;
         private final boolean mustPlay10;
@@ -336,7 +338,7 @@ public interface OutgoingMessage {
         private final int starterPlayerIndex;
         private final Set<String> winningPlayerIds;
         private final Map<String, Card.Value> playerRankScores;
-
+        private final Map<String, Integer> playerRankCycles;
         private final GameStatus status;
     }
 

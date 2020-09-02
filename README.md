@@ -5,6 +5,7 @@
 * Boost: 20/30/40 points per rank.
 * No-cap: if a player's rank exceeds A, then continues with 2.
 * Must-play: support an optional must-play feature on rank 5, 10, K.
+* Chao-Di-Pi: optional feature.
 
 ## Ran's patch to the bugs or modifications
 * Patch 1: if the first player makes a special play, e.g. spades AK, the following player cannot cover by spades 99.
@@ -12,25 +13,23 @@
 * Patch 3: in a 3-deck game, if first player plays 5566, the following player with 2389777 must play 77.
 * Patch 4: if a special play fails, the player plays the smallest bad component.
 * Change the background music to "find a friend".
-* Make the background prettier.
+* Change the background image to a prettier one.
 
 ## Bugs and future improvements
-* First player plays QQQA, the follower with 99AA has to play both pairs, instead of just one. This is because both "99" and "AA" belong to the "must-play" set and the player cannot replace one of them by two singles.
 * On the UI, the cards should be sorted so that the color is "black-red-black-red".
-* Support "Chao-Di-Pi"
+* First player plays QQQA, the follower with 99AA has to play both pairs, instead of just one. This is because both "99" and "AA" belong to the "must-play" set and the player cannot replace one of them by two singles.
 
 ## Introduction
 Multiplayer online tractor game. Try it at https://orange-tractor.herokuapp.com/.
 
 ![Screenshot](screenshot.png)
 
-
 ## Quickstart
-
-    npm install
-    npm run build
-    ./gradlew run
-
+```
+npm install
+npm run build
+./gradlew run
+```
 Go to http://localhost:8080.
 
 ## Start a game server from any machine with ubuntu OS, public IP address, and port 8080 available
@@ -51,14 +50,14 @@ npm run build
 Players then can visit http://{ip_address}:8080/#/{room_number}
 
 ## Start a game server on the AWS EC2 instance
-* Launch a m5.large on-demand EC2 instance in US East (Ohio) Zone, with AMI ami-05d46f70638444a46, and with 8080 port open.
+* Launch a t3a.small on-demand EC2 instance in US East (Ohio) Zone, with AMI ami-05d46f70638444a46, and with 8080 port open. The cost is $0.45/day.
 
 ```
 # Login the EC2 instance
 chmod 400 tractor_share.pem
 ssh -i tractor_share.pem ubuntu@{ip_address}
 
-# Start the game server in the screen session
+# Start the game server in a screen session
 screen
 cd tractor_private/
 npm run build

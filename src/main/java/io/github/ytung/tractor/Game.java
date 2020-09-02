@@ -226,9 +226,16 @@ public class Game {
         if (play.getCardIds().size() == 1 && status == GameStatus.SPECIAL_DRAW_KITTY)
             throw new InvalidDeclareException("In the Chao-Di-Pi phase, you cannot declare a single card.");
 
-        if (declaredCards.isEmpty())
-            return;
+        if (declaredCards.isEmpty()){
+            if (status == GameStatus.DRAW || status == GameStatus.DRAW_KITTY)
+                return;
+            else if (kittyOwnerIndex != playerIds.indexOf(play.getPlayerId())) // SPECIAL_DRAW_KITTY phase
+                return;
+            else
+                throw new InvalidDeclareException("You are the starter and just made the kitty, so you are not allowed to Cook now.");
+        }
 
+        // Someone has already declared something.
         // [EditByRan] The new declare rules including "Chao-Di-Pi" features.
         Play lastDeclaredPlay = declaredCards.get(declaredCards.size() - 1);
         Suit lastDeclaredSuit = cardsById.get(lastDeclaredPlay.getCardIds().get(0)).getSuit();
@@ -242,6 +249,10 @@ public class Game {
         } else if (lastDeclaredPlay.getPlayerId().equals(play.getPlayerId()))
             throw new InvalidDeclareException("You cannot strengthen your declare in the Chao-Di-Pi phase.");
         else {
+            // In the Chao-Di-Pi phase, the Starter is not able to Chao firstly, since he/she just takes the kitty
+            if (status == GameStatus.SPECIAL_DRAW_KITTY && kittyOwnerIndex == playerIds.indexOf(play.getPlayerId()))
+                throw new InvalidDeclareException("You are the starter and just made the kitty, so you are not allowed to Cook now.");
+            
             // other players can only override
             if (play.getCardIds().size() < lastDeclaredPlay.getCardIds().size())
                 throw new InvalidDeclareException("You must declare more cards than the last declare.");
@@ -297,11 +308,14 @@ public class Game {
         if (status != GameStatus.SPECIAL_DRAW_KITTY && status != GameStatus.DRAW_KITTY && status != GameStatus.EXPOSE_BOTTOM_CARDS)
             return null;
         GameStatus oldstatus = status;
-        status = (oldstatus == GameStatus.DRAW_KITTY) ? GameStatus.MAKE_KITTY : GameStatus.SPECIAL_MAKE_KITTY;
+        status = (oldstatus == GameStatus.DRAW_KITTY || oldstatus == GameStatus.EXPOSE_BOTTOM_CARDS) ?
+                 GameStatus.MAKE_KITTY : GameStatus.SPECIAL_MAKE_KITTY;
         System.out.println("@takeKitty(): status = " + status + ", oldstatus = " + oldstatus);
-        currentPlayerIndex = (oldstatus == GameStatus.DRAW_KITTY) ? starterPlayerIndex : playerIds.indexOf(declaredCards.get(declaredCards.size() - 1).getPlayerId());
+        currentPlayerIndex = (oldstatus == GameStatus.DRAW_KITTY || oldstatus == GameStatus.EXPOSE_BOTTOM_CARDS) ?
+                 starterPlayerIndex : playerIds.indexOf(declaredCards.get(declaredCards.size() - 1).getPlayerId());
         String playerId = playerIds.get(currentPlayerIndex);
-        List<Integer> cardIds = (oldstatus == GameStatus.DRAW_KITTY) ? new ArrayList<>(deck) : new ArrayList<>(kitty);
+        List<Integer> cardIds = (oldstatus == GameStatus.DRAW_KITTY || oldstatus == GameStatus.EXPOSE_BOTTOM_CARDS) ?
+                 new ArrayList<>(deck) : new ArrayList<>(kitty);
         playerHands.get(playerIds.get(currentPlayerIndex)).addAll(cardIds);
         sortCards(playerHands.get(playerIds.get(currentPlayerIndex)));
         deck.clear();
@@ -311,9 +325,6 @@ public class Game {
     public synchronized void makeKitty(String playerId, List<Integer> cardIds) throws InvalidKittyException {
         sortCards(cardIds);
         Play play = new Play(playerId, cardIds);
-        System.out.println("@makeKitty(): status = " + status);
-        System.out.println("@makeKitty(): playerId = " + playerId);
-
         // [EditByRan] Remove the check on the kitty
         if ((status != GameStatus.MAKE_KITTY && status != GameStatus.SPECIAL_MAKE_KITTY))
             throw new InvalidKittyException("You cannot make kitty now");
@@ -352,7 +363,6 @@ public class Game {
 
     // [EditByRan] "Chao-Di-Pi" feature: start play function after nobody choose to override.
     public synchronized void startPlay(){
-        System.out.println("startPlay, status = GameStatus.PLAY");
         status = GameStatus.PLAY;
         currentPlayerIndex = starterPlayerIndex;
         currentTrick = new Trick(playerIds.get(starterPlayerIndex));
@@ -585,7 +595,7 @@ public class Game {
                 currentRoundScores.put(winningPlayerId, currentRoundScores.get(winningPlayerId) + bonus * totalCardScore(kitty));
             }
 
-            // [EditByRan] give a balance credit of 5 * numDecks to the non-declarer team in the findAFriend mode, was "int roundScore = 0;"
+            // [EditByRan] give a balance credit of 5 * numDecks to the non-declarer team in the findAFriend mode, wich was 0
             int roundScore = (playerIds.size() % 2 == 0 && findAFriend) ? (5 * numDecks) : 0;
             for (String playerId : playerIds) {
                 if (isDeclaringTeam.get(playerId)) {
@@ -640,6 +650,7 @@ public class Game {
         do {
             // starter goes to next person on the winning team
             starterPlayerIndex = (starterPlayerIndex + 1) % playerIds.size();
+            kittyOwnerIndex = starterPlayerIndex;
         } while (starterPlayerIndex != prevStarterPlayerIndex
                 && isDeclaringTeam.get(playerIds.get(starterPlayerIndex)) != doDeclarersWin);
         winningPlayerIds.clear();
@@ -682,13 +693,6 @@ public class Game {
                 scoreIncrease -= 1;
             }
         }
-        System.out.println("updatePlayerScore(). Print oldScore, newScore, scoreIncrease, doDeclarersWin");
-        System.out.println(oldScore);
-        System.out.println(newScore);
-        System.out.println(scoreIncrease);
-        System.out.println(doDeclarersWin);
-        System.out.println("");
-
         playerRankScores.put(playerId, Card.Value.values()[newScore]);
         // if (newScore > Card.Value.ACE.ordinal())
         //    playerRankScores.put(playerId, Card.Value.ACE);
@@ -893,23 +897,6 @@ public class Game {
             // [EditByRan]: the starting player has WidthCap = 10, meaning no limit
             List<Component> bestProfile = getProfile(plays.get(0).getCardIds(), 10);
             Grouping bestGrouping = getGrouping(plays.get(0).getCardIds());
-            
-            /**
-             * [EditByRan] Root cause of the bug:
-             * A 99 can be either a pair if the first player plays a pair, or two singles if the first players plays singles. However, 99 is always a pair in this version
-             * 
-             * [EditByRan] Mitigate the bug by,
-             * (1) Memorizing the startingProfile and startingGrouping
-             * (2) if startingProfile.size() > 1 and startingGrouping == Grouping.TRUMP, then it is a winning hand
-             * (3) if startingProfile.size() > 1 and startingGrouping != Grouping.TRUMP, the one that covers it must be a TRUMP hand
-             * (4) if startingProfile.size() == 1, the logic should be correct
-             * 
-             * [EditByRan] Bug still exists in the following cases,
-             *   TRUMP 99 covers TRUMP AK if the starting player deals special play with two singles (because pair > singles)
-             *   [?] TRUMP 99A cannot cover TRUMP 88A if the starting player deals special play with a pair and a single?
-             *
-             * [EditByRan] Before the bug is fully fix, this is the rule when you want to cover someone (B), with starting player (A): you only need to cover B's hand instead of looking at A and B
-             */
              
             // [EditByRan]: the starting player has WidthCap = 10, meaning no limit
             List<Component> startingProfile = getProfile(plays.get(0).getCardIds(), 10);

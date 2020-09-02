@@ -486,7 +486,7 @@ export class Room extends React.Component {
           kittyOwnerIndex === myPlayerId) {
         return <div className='notification'>{"You are not allowed to declare, please click Pass"}</div>
       } else { // The player is allowed to declare
-        return <div className='notification'>{"Select 2+ card(s) to declare, or click Pass"}</div>
+        return <div className='notification'>{"Chao-Di-Pi phase: select 2+ card(s) to declare, or click Pass"}</div>
       }
     }
 
@@ -698,9 +698,9 @@ export class Room extends React.Component {
 
     // [EditByRan] Chao-Di-Pi phase
     if (status === 'SPECIAL_DRAW_KITTY'){
-      // Two types of players are not allowed to declare: the KittyOwner, DeclaredCardsOwner
       if ((declaredCards.length > 0 && declaredCards[declaredCards.length - 1].playerId === myPlayerId) ||
           kittyOwnerIndex === myPlayerId) {
+        // Two types of players are not allowed to declare: the KittyOwner, DeclaredCardsOwner
         return <ActionButton
           text={`${iAmReadyForPlay ? 'Ready' : 'Pass'} (${numPlayersReadyForPlay}/${humanControllers.length})`}
           clicked={iAmReadyForPlay}
@@ -718,7 +718,7 @@ export class Room extends React.Component {
         else { // selectedCardIdsList.length !== 0 || !iAmReadyForPlay
           // the player has NOT clicked the 'Pass' button yet and selected something
           return <ActionButton
-            text='Declare'
+            text='Cook'
             onClick={() => {
               const cardIds = [...selectedCardIdsList];
               this.connection.send({ DECLARE: { cardIds } });

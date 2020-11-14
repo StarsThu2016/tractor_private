@@ -38,19 +38,22 @@ export const setUpConnection = function(urlPath, onMessage) {
   };
 
   request.onReopen = function(response) {
-    console.log('Atmosphere re-connected using ' + response.transport);
+    // disable console to anti-cheat
+    // console.log('Atmosphere re-connected using ' + response.transport);
   };
 
   request.onClose = function(response) {
     // TODO: send close request?
-    console.log('disconnecting');
+    // disable console to anti-cheat
+    // console.log('disconnecting');
   };
 
   request.onError = console.error;
 
   request.onMessage = response => {
     const responseBody = response.responseBody;
-    console.log('Received response: ' + responseBody);
+    // disable console to anti-cheat
+    // console.log('Received response: ' + responseBody);
     const message = JSON.parse(responseBody);
     onMessage(message);
   };

@@ -28,9 +28,9 @@ function getImageSrc(name) {
 
 function getImageName(card) {
   if (card.value == 'SMALL_JOKER') {
-    return 'Milli'; // return 'jb';
+    return 'Milli3'; // return 'jb';
   } else if (card.value == 'BIG_JOKER') {
-    return 'Andy'; //return 'jr';
+    return 'Andy3'; //return 'jr';
   } else {
     return `${SUITS[card.suit]}${VALUES[card.value]}`;
   }

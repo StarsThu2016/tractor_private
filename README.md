@@ -1,11 +1,16 @@
 # Tractor (拖拉机)
 
 ## Ran's House Rule
-* Compensate: give a 10/15 credit points to the non-declare team (find a friend mode only), when there are 4/6/8 players in total.
-* Boost: 20/30/40 points per rank.
-* No-cap: if a player's rank exceeds A, then continues with 2.
+* Compensate: give a 10/15/20 credit points to the non-declare team (find a friend mode only), when there are 4/6/8 players in total.
+* Boost: 20/30/40 points per rank when the winning team is promoted.
+* No-cap: if a player's rank exceeds A, then continues with 2+.
 * Must-play: support an optional must-play feature on rank 5, 10, K.
-* Chao-Di-Pi: optional feature.
+* Chao-Di-Pi: optional feature
+  * Order: ... > 3 big jokers > 3 small jokers > 222 > 2 big jokers > 2 small jokers > 22
+  * Suggest to enable the "must-play-on X" feature because the "cook" team may easily get 200+ points.
+  * The starter cannot be the first one to "cook" after he/she just makes the kitty
+  * A person cannot "cook" his/her own declaration
+  * In "find a friend" mode, a cook is not allowed to put the "declaration of friend" card into the kitty, except the starter (having the risk of not finding friends).
 
 ## Ran's patch to the bugs or modifications
 * Patch 1: if the first player makes a special play, e.g. spades AK, the following player cannot cover by spades 99.

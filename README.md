@@ -69,7 +69,6 @@ Players then can visit http://{ip_address}:8080/#/{room_number}
 chmod 400 tractor_share.pem
 ssh -i tractor_share.pem ubuntu@{ip_address}
 
-# Start the game server in a screen session
 screen
 cd tractor_private/
 npm run build
@@ -77,6 +76,38 @@ npm run build
 ```
 
 Players then can visit http://{ip_address}:8080/#/{room_number}
+
+## Deploy the game server on Heroku (Cloud Application Platform)
+### Install Heuroku CLI
+[reference](https://phasertutorials.com/hosting-your-multiplayer-phaser-game-on-heroku/)
+```
+sudo snap install --classic heroku
+heroku login --interactive
+```
+
+Add
+```
+{
+}
+```
+to ```.local/share/heroku/config.json```
+
+### Use Gradle Shadow to build the project and then heroku run locally
+```
+curl -s "https://get.sdkman.io" | bash
+sdk install gradle 6.8.2
+gradle shadowJar
+heroku local web
+```
+
+If some apps are using 8080 or 8081 port, find it by ```netstat -nap | grep 8080``` and kill it by ```sudo kill -9 $pid```.
+If ```heroku local web``` succeeds, you can visit ```localhost:5000``` for front-end web.
+
+### Deploy the project on Heroku
+[create Keroku app](https://devcenter.heroku.com/articles/creating-apps)
+```
+heroku create sj-cdp
+```
 
 ## Features:
 

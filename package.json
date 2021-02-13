@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ytung/tractor.git"
+    "url": "git+https://github.com/StarsThu2016/tractor_private.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ytung/tractor/issues"
+    "url": "https://github.com/StarsThu2016/tractor_private/issues"
   },
-  "homepage": "https://github.com/ytung/tractor#readme",
+  "homepage": "https://github.com/StarsThu2016/tractor_private#readme",
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.8.3",

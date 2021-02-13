@@ -8,18 +8,12 @@ import './playerNametag.css';
  */
 export class PlayerNametag extends React.Component {
 
-    // [EditByRan] Implement must-play-rank feature.
-    // [EditByRan] Implement the "Chao-Di-Pi" feature.
     render() {
         const {
             playerId,
             playerNames,
             playerIds,
             findAFriend,
-            mustPlay5,
-            mustPlay10,
-            mustPlayK,
-            chaoDiPi,
             status,
             currentPlayerIndex,
             isDeclaringTeam,

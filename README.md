@@ -43,6 +43,12 @@ Go to http://localhost:8080.
 screen
 sudo apt-get update
 sudo apt-get install git nodejs npm openjdk-8-jdk
+sudo apt install build-essential checkinstall libssl-dev
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.1/install.sh | bash
+nvm --version
+nvm ls
+nvm ls-remote
+nvm install 14.15.5
 
 # Download source code, build and run
 git clone https://github.com/StarsThu2016/tractor_private.git

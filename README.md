@@ -17,6 +17,7 @@
 * Patch 2: if the first player makes a special play with singles and the following players cover by TRUMP, the rank of the hand is determined by the max of singles.
 * Patch 3: in a 3-deck game, if first player plays 5566, the following player with 2389777 must play 77.
 * Patch 4: if a special play fails, the player plays the smallest bad component.
+* Patch 5: the bonus for non-declare team is based on the largest component. Single = "*2", double = "*4", triple = "*8". 
 * Change the background music to "find a friend".
 * Change the background image to a prettier one.
 
@@ -25,7 +26,7 @@
 * First player plays QQQA, the follower with 99AA has to play both pairs, instead of just one. This is because both "99" and "AA" belong to the "must-play" set and the player cannot replace one of them by two singles.
 
 ## Introduction
-Multiplayer online tractor game. Try it at https://orange-tractor.herokuapp.com/.
+Multiplayer online tractor game. Try it at https://util.in:8096 or https://orange-tractor.herokuapp.com/.
 
 ![Screenshot](screenshot.png)
 
@@ -86,7 +87,7 @@ Players then can visit http://{ip_address}:8080/#/{room_number}
 - Supports take-backs
 - Sound notifications on your turn
 - Shows the currently winning player in each trick
-- View the most recent trick
+- View the previous trick
 - Automatic card drawing during the draw phase
 - AI players
 

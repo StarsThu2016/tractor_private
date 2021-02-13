@@ -1,6 +1,7 @@
 package io.github.ytung.tractor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -794,10 +795,16 @@ public class Game {
 
     private void sortCards(List<Integer> hand) {
         Card trump = getCurrentTrump();
+
+        // Ensure same-colored suits are generally not next to each other
+        List<Grouping> order = trump.getSuit().equals(Card.Suit.DIAMOND) || trump.getSuit().equals(Card.Suit.SPADE)
+                ? Arrays.asList(Grouping.DIAMOND, Grouping.CLUB, Grouping.HEART, Grouping.SPADE, Grouping.TRUMP)
+                : Arrays.asList(Grouping.CLUB, Grouping.DIAMOND, Grouping.SPADE, Grouping.HEART, Grouping.TRUMP);
+
         Collections.sort(hand, Comparator.comparing(cardId -> {
             Card card = cardsById.get(cardId);
             Grouping grouping = Cards.grouping(card, trump);
-            return grouping.ordinal() * 1000 + Cards.rank(card, trump) * 10 + card.getSuit().ordinal();
+            return order.indexOf(grouping) * 1000 + Cards.rank(card, trump) * 10 + card.getSuit().ordinal();
         }));
     }
 
@@ -951,7 +958,6 @@ public class Game {
      * otherPlay is two singles, then the pair covers the singles. This method is used to check the
      * first requirement of beating a play in Tractor: whether your play has the same "shape".
      */
-    // [EditByRan] bug notice -- if otherPlay.size() > 1, this is a special play, the length of myPlay and otherPlay can be different and leads to an error outcome, e.g. 99 > AK.
     private static boolean hasCoveringShape(List<Component> myPlay, List<Component> otherPlay) {
         TreeMultiset<Shape> myShapes = TreeMultiset.create(Comparator.comparing(shape -> shape.getWidth() * shape.getHeight()));
         for (Component component : myPlay)

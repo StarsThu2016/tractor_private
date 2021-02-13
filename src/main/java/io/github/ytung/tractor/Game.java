@@ -597,7 +597,11 @@ public class Game {
         // check for end of round
         if (playerHands.values().stream().allMatch(List::isEmpty)) {
             if (!isDeclaringTeam.get(winningPlayerId)) {
-                int bonus = 2 * pastTricks.get(pastTricks.size() - 1).getPlays().get(0).getCardIds().size();
+                // [EditByRan]: modify the bonus of the non-declare team, get the starter's component and its size
+                List<Component> profile = getProfile(pastTricks.get(pastTricks.size()-1).getPlays().get(0).getCardIds(), 10);
+                int bonusSize = profile.stream().mapToInt(component -> component.getShape().getWidth()*component.getShape().getHeight()).max().orElse(0);
+                int bonus = 1 << bonusSize; // 2 ^ bonusSize
+                // int bonus = 2 * pastTricks.get(pastTricks.size() - 1).getPlays().get(0).getCardIds().size();
                 currentRoundScores.put(winningPlayerId, currentRoundScores.get(winningPlayerId) + bonus * totalCardScore(kitty));
             }
 

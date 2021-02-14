@@ -107,7 +107,20 @@ If ```heroku local web``` succeeds, you can visit ```localhost:5000``` for front
 [create Keroku app](https://devcenter.heroku.com/articles/creating-apps)
 ```
 heroku create sj-cdp
+heroku buildpacks:set heroku/nodejs
+heroku buildpacks:add heroku/jvm
+git push heroku master
+heroku ps:scale web=1
 ```
+Note: remember to push ```build/libs/tractor-all.jar``` to the git repo.
+
+## Dev steps
+* Modify the source code
+* Validate locally
+* Build with ```gradle shadowJar```
+* git add-commit-push
+* Check auto-deploy
+* Validate on cloud
 
 ## Features:
 

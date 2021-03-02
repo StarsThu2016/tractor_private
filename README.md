@@ -1,16 +1,16 @@
 # Tractor (拖拉机)
 
 ## Ran's House Rule
-* Compensate: give a 10/15/20 credit points to the non-declare team (find a friend mode only), when there are 4/6/8 players in total.
-* Boost: 20/30/40 points per rank when the winning team is promoted.
+* Compensate: give 10/15/20 points to the non-declare team (Find-a-Friend mode only), when there are 2/3/4 decks in total.
+* Boost: 20/30/40 points per level when the winning team is promoted.
 * No-cap: if a player's rank exceeds A, then continues with 2+.
-* Must-play: support an optional must-play feature on rank 5, 10, K.
-* Chao-Di-Pi: optional feature
+* Must-play: support an optional must-play feature on rank 5, 10, and K.
+* Chao-Di-Pi (optional):
   * Order: ... > 3 big jokers > 3 small jokers > 222 > 2 big jokers > 2 small jokers > 22
   * Suggest to enable the "must-play-on X" feature because the "cook" team may easily get 200+ points.
   * The starter cannot be the first one to "cook" after he/she just makes the kitty
   * A person cannot "cook" his/her own declaration
-  * In "find a friend" mode, a cook is not allowed to put the "declaration of friend" card into the kitty, except the starter (having the risk of not finding friends).
+  * In "Find-a-Friend" mode, a cook is not allowed to put the "declaration of friend" card into the kitty, except the starter (having the risk of not finding friends).
 
 ## Ran's patch to the bugs or modifications
 * Patch 1: if the first player makes a special play, e.g. spades AK, the following player cannot cover by spades 99.
@@ -22,8 +22,8 @@
 * Change the background image to a prettier one.
 
 ## Bugs and future improvements
-* On the UI, the cards should be sorted so that the color is "black-red-black-red".
 * First player plays QQQA, the follower with 99AA has to play both pairs, instead of just one. This is because both "99" and "AA" belong to the "must-play" set and the player cannot replace one of them by two singles.
+* Occationally, players get cards with face down due to unknown communication errors.
 
 ## Introduction
 Multiplayer online tractor game. Try it at https://util.in:8096 or https://orange-tractor.herokuapp.com/.
@@ -116,11 +116,12 @@ Note: remember to push ```build/libs/tractor-all.jar``` to the git repo.
 
 ## Dev steps
 * Modify the source code
-* Validate locally
+* Validate locally with ``npm run build && ./gradlew run````
 * Build with ```gradle shadowJar```
-* git add-commit-push
+* Validate the jar file with ```java -Ddw.server.applicationConnectors[0].port=9090 -Dserver.port=9090 -jar build/libs/tractor-all.jar```
+* ```git add . && git commit; git push```
 * Check auto-deploy
-* Validate on cloud
+* Validate on the cloud
 
 ## Features:
 

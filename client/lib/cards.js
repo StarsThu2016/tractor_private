@@ -15,14 +15,13 @@ export const VALUES = Object.freeze({
   'ACE': 'A',
 });
 
-export const PLUS = Object.freeze({
-  0: '',
-  1: '+',
-  2: '++',
-  3: '+++',
-  4: '++++',
-  5: '+++++',
-});
+var PLUS0 = {0: ''};
+
+for (let i = 1; i < 100; i++){
+  PLUS0[i] = PLUS0[i-1] + '+';
+}
+
+export const PLUS = Object.freeze(PLUS0);
 
 export const SUITS = Object.freeze({
   'CLUB': 'CLUBS ♣',

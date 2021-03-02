@@ -28,9 +28,7 @@ export const getAudio = function () {
     var startVolume = 0.1;
 
     function play(audio, file, loop) {
-        if (audio.duration > 0) {
-            audio.pause();
-        }
+        audio.pause();
         if (startVolume > 0) {
             audio.src = file;
             audio.volume = startVolume;
@@ -43,8 +41,10 @@ export const getAudio = function () {
     return {
         prepare: () => {
             // On mobile, an explicit user action is required to play mp3s
-            audio.play().then(() => audio.pause());
-            longAudio.play().then(() => longAudio.pause());
+            audio.play();
+            audio.pause();
+            longAudio.play();
+            longAudio.pause();
         },
         setVolume: volume => {
             startVolume = VOLUMES[volume];

@@ -29,19 +29,11 @@
 * Occationally, players get cards with face down due to unknown communication errors.
 
 ## Introduction
-Multiplayer online tractor game. Try it at https://util.in:8096 or https://orange-tractor.herokuapp.com/.
+Multiplayer online tractor game. Public game server at https://util.in:8096 or https://orange-tractor.herokuapp.com/.
 
 ![Screenshot](screenshot.png)
 
-## Quickstart
-```
-npm install
-npm run build
-./gradlew run
-```
-Go to http://localhost:8080.
-
-## Start a game server from any machine with ubuntu OS, public IP address, and port 8080 available
+## Start a Game Server from a ubuntu OS, Public IP Address, and port 8080 Available
 ```
 # Install nodejs, npm and Java
 screen
@@ -49,9 +41,7 @@ sudo apt-get update
 sudo apt-get install git nodejs npm openjdk-8-jdk
 sudo apt install build-essential checkinstall libssl-dev
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.1/install.sh | bash
-nvm --version
-nvm ls
-nvm ls-remote
+nvm --version; nvm ls; nvm ls-remote
 nvm install 14.15.5
 
 # Download source code, build and run
@@ -62,9 +52,9 @@ npm run build
 ./gradlew run
 ```
 
-Players then can visit http://{ip_address}:8080/#/{room_number}
+Players then can visit http://{ip_address}:8080/#/{room_number}.
 
-## Start a game server on the AWS EC2 instance
+## Start a Game Server on an AWS EC2 Instance
 * Launch a t3a.small on-demand EC2 instance in US East (Ohio) Zone, with AMI ami-05d46f70638444a46, and with 8080 port open. The cost is $0.45/day.
 
 ```
@@ -78,11 +68,10 @@ npm run build
 ./gradlew run
 ```
 
-Players then can visit http://{ip_address}:8080/#/{room_number}
+Players then can visit http://{ip_address}:8080/#/{room_number}.
 
-## Deploy the game server on Heroku (Cloud Application Platform)
-### Install Heuroku CLI
-[reference](https://phasertutorials.com/hosting-your-multiplayer-phaser-game-on-heroku/)
+## Deploy the Game Server on Heroku (Cloud Application Platform)
+### [Install Heuroku CLI](https://phasertutorials.com/hosting-your-multiplayer-phaser-game-on-heroku/)
 ```
 sudo snap install --classic heroku
 heroku login --interactive
@@ -95,7 +84,7 @@ Add
 ```
 to ```.local/share/heroku/config.json```
 
-### Use Gradle Shadow to build the project and then heroku run locally
+### Use Gradle Shadow to Build the Project and then "heroku run" Locally
 ```
 curl -s "https://get.sdkman.io" | bash
 sdk install gradle 6.8.2
@@ -104,10 +93,10 @@ heroku local web
 ```
 
 If some apps are using 8080 or 8081 port, find it by ```netstat -nap | grep 8080``` and kill it by ```sudo kill -9 $pid```.
-If ```heroku local web``` succeeds, you can visit ```localhost:5000``` for front-end web.
+If ```heroku local web``` succeeds, you can visit ```localhost:5000``` to play the game.
 
 ### Deploy the project on Heroku
-[create Keroku app](https://devcenter.heroku.com/articles/creating-apps)
+[Create a Keroku app](https://devcenter.heroku.com/articles/creating-apps)
 ```
 heroku create sj-cdp
 heroku buildpacks:set heroku/nodejs
@@ -117,7 +106,7 @@ heroku ps:scale web=1
 ```
 Note: remember to push ```build/libs/tractor-all.jar``` to the git repo.
 
-## Dev steps
+## Development Steps
 * Modify the source code
 * Validate locally with ``npm run build && ./gradlew run````
 * Build with ```gradle shadowJar```
@@ -126,7 +115,7 @@ Note: remember to push ```build/libs/tractor-all.jar``` to the git repo.
 * Check auto-deploy
 * Validate on the cloud
 
-## Features:
+## Basic Features:
 
 - Engine implements the full ruleset and allows only valid plays
 - Supports variable number of players and variable number of decks
@@ -141,7 +130,7 @@ Note: remember to push ```build/libs/tractor-all.jar``` to the git repo.
 
 The engine follows the ruleset and terminology [here](https://www.pagat.com/kt5/tractor.html).
 
-## Development
+## Development Notes
 
 ### Backend
 

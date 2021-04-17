@@ -24,6 +24,7 @@
 ## Bugs and Future Improvements
 * If nobody claims and a trump is picked by uncovering the kitty, somebody other than the kitty owner may be able to see the kitty. Refreshing the webpage can fix the bug. 
 * First game with rank modifications, the union of all ranks is declarable for every one. But one should only decalre his/her own rank.
+* Allow/ban take-back.
 * Allow boost/normal speed.
 * Allow ordered Chao-Di-Pi, optionally.
 * First player plays QQQA, the follower with 99AA has to play both pairs, instead of just one. This is because both "99" and "AA" belong to the "must-play" set and the player cannot replace one of them by two singles.

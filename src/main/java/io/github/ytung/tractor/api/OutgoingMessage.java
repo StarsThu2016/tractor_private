@@ -90,6 +90,7 @@ public interface OutgoingMessage {
 
     // [EditByRan] Implement must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
+    // [EditByRan] Implement the ban-take-back feature.
     @Data
     public static class FullRoomState implements OutgoingMessage {
 
@@ -101,6 +102,7 @@ public interface OutgoingMessage {
         private final boolean mustPlay10;
         private final boolean mustPlayK;
         private final boolean chaoDiPi;
+        private final boolean banTB;
         private final int kittyOwnerIndex;
 
         private final int roundNumber;
@@ -141,6 +143,7 @@ public interface OutgoingMessage {
 
     // [EditByRan] Implement must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
+    // [EditByRan] Implement the ban-take-back feature.
     @Data
     public static class UpdatePlayers implements OutgoingMessage {
 
@@ -152,6 +155,7 @@ public interface OutgoingMessage {
         private final boolean mustPlay10;
         private final boolean mustPlayK;
         private final boolean chaoDiPi;
+        private final boolean banTB;
         private final int kittySize;
         private final Set<String> aiControllers;
         private final Set<String> humanControllers;
@@ -161,6 +165,7 @@ public interface OutgoingMessage {
 
     // [EditByRan] Implement must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
+    // [EditByRan] Implement the ban-take-back feature.
     @Data
     public static class GameConfiguration implements OutgoingMessage {
 
@@ -170,6 +175,7 @@ public interface OutgoingMessage {
         private final boolean mustPlay10;
         private final boolean mustPlayK;
         private final boolean chaoDiPi;
+        private final boolean banTB;
         private final int kittySize;
         private final Map<String, Boolean> playerReadyForPlay;
     }

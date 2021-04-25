@@ -15,6 +15,7 @@ import {
   Kitty,
   PlayerArea,
   PlayerNametag,
+  RejoinPanel,
   RoundInfoPanel,
   RoundStartPanel,
   SettingsPanel,
@@ -63,10 +64,12 @@ export class Room extends React.Component {
       findAFriend: false, // boolean
       // [EditByRan] Implement the must-play-rank feature.
       // [EditByRan] Implement the "Chao-Di-Pi" feature.
+      // [EditByRan] Implement the ban-take-back feature.
       mustPlay5: false, // boolean
       mustPlay10: false, // boolean
       mustPlayK: false, // boolean
       chaoDiPi: false,  // boolean
+      banTB: false,  // boolean
       kittyOwnerIndex: undefined, // integer
       kittySize: 8, // integer
       roundNumber: undefined, // integer
@@ -344,6 +347,7 @@ export class Room extends React.Component {
       mustPlay5,
       mustPlay10,
       mustPlayK,
+      banTB,
       chaoDiPi,
       playerRankScores,
       playerRankCycles,
@@ -353,6 +357,7 @@ export class Room extends React.Component {
     if (status === 'START_ROUND') {
       // [EditByRan] Implement the must-play-rank feature.
       // [EditByRan] Implement the "Chao-Di-Pi" feature.
+      // [EditByRan] Implement the ban-take-back feature.
       return <RoundStartPanel
         aiControllers={aiControllers}
         humanControllers={humanControllers}
@@ -368,6 +373,7 @@ export class Room extends React.Component {
         mustPlay10={mustPlay10}
         mustPlayK={mustPlayK}
         chaoDiPi={chaoDiPi}
+        banTB={banTB}
         playerRankScores={playerRankScores}
         playerRankCycles={playerRankCycles}
         winningPlayerIds={winningPlayerIds}
@@ -499,6 +505,8 @@ export class Room extends React.Component {
   // [EditByRan] Add kittyOwnerIndex, declaredCards
   renderNotifications() {
     const {
+      aiControllers,
+      humanControllers,
       playerNames,
       playerReadyForPlay,
       myPlayerId,
@@ -511,6 +519,15 @@ export class Room extends React.Component {
       currentPlayerIndex,
       declaredCards,
     } = this.state;
+    if (!myPlayerId) {
+      return <RejoinPanel
+        aiControllers={aiControllers}
+        humanControllers={humanControllers}
+        playerNames={playerNames}
+        playerIds={playerIds}
+        rejoin={playerId => this.connection.send({ REJOIN: { playerId }})}
+      />;
+    }
     if (confirmSpecialPlayCards !== undefined) {
       return <ConfirmationPanel
         message={'That is a multiple-component play. If any component can be beaten, you will pay a 10 point penalty.'}
@@ -699,13 +716,14 @@ export class Room extends React.Component {
   }
 
   renderSettings() {
-    const { myPlayerId, soundVolume, isEditingPlayers, playerIds, status, currentTrick } = this.state;
+    const { myPlayerId, soundVolume, isEditingPlayers, playerIds, status, currentTrick, banTB } = this.state;
     return <SettingsPanel
       myPlayerId={myPlayerId}
       soundVolume={soundVolume}
       playerIds={playerIds}
       status={status}
       currentTrick={currentTrick}
+      banTB={banTB}
       forfeit={() => this.connection.send({ FORFEIT: {} })}
       leaveRoom={() => this.connection.send({ REMOVE_PLAYER: { playerId: myPlayerId } })}
       setSoundVolume={soundVolume => {

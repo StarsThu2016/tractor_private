@@ -38,12 +38,14 @@ public class Game {
     // game configuration
     // [EditByRan] Implement must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
+    // [EditByRan] Implement the ban-take-back feature.
     private int numDecks = 2;
     private boolean findAFriend = false;
     private boolean mustPlay5 = false;
     private boolean mustPlay10 = false;
     private boolean mustPlayK = false;
     private boolean chaoDiPi = false;
+    private boolean banTB = false;
     private int kittyOwnerIndex;
 
     // constant over each round
@@ -150,6 +152,11 @@ public class Game {
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
     public synchronized void setChaoDiPi(boolean chaoDiPi) {
         this.chaoDiPi = chaoDiPi;
+    }
+
+    // [EditByRan] Implement the ban-take-back feature.
+    public synchronized void setBanTB(boolean banTB) {
+        this.banTB = banTB;
     }
 
     public synchronized void startRound() {

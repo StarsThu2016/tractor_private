@@ -15,6 +15,7 @@ export class SettingsPanel extends React.Component {
         }
     }
 
+    // [EditByRan] Implement the ban-take-back feature.
     render() {
         const {
             myPlayerId,
@@ -22,6 +23,7 @@ export class SettingsPanel extends React.Component {
             playerIds,
             status,
             currentTrick,
+            banTB,
             forfeit, // () => void
             leaveRoom, // () => void
             setSoundVolume, // soundVolume => void
@@ -38,7 +40,7 @@ export class SettingsPanel extends React.Component {
                     title={"Sound volume"}
                 />
                 {this.maybeRenderEditPlayersButton(status, toggleEditPlayers)}
-                {this.maybeRenderTakeBackButton(currentTrick, myPlayerId, takeBack)}
+                {this.maybeRenderTakeBackButton(currentTrick, myPlayerId, banTB, takeBack)}
             </div>
         );
     }
@@ -94,8 +96,8 @@ export class SettingsPanel extends React.Component {
         />;
     }
 
-    maybeRenderTakeBackButton(currentTrick, myPlayerId, takeBack) {
-        if (status === 'START_ROUND' || !currentTrick) {
+    maybeRenderTakeBackButton(currentTrick, myPlayerId, banTB, takeBack) {
+        if (status === 'START_ROUND' || !currentTrick || banTB) {
             return;
         }
         const { plays } = currentTrick;

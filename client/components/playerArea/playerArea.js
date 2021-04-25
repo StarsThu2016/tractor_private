@@ -71,7 +71,7 @@ export class PlayerArea extends React.Component {
       var distance0 = distance;
       // 4p: [-1, 0, 1, 2], 5p: [-1, 0, 1, 2, 3], 6p: [-1, 0, 1, 2, 3, 4]
       var diff_index = (playerIndex-myIndex >= -1) ? (playerIndex - myIndex) : (playerIndex + playerIds.length - myIndex);
-      if (diff_index >= playerIds.length - 1) {
+      if (diff_index >= playerIds.length - 1 && playerIds.length > 1) {
         diff_index = diff_index - playerIds.length;
       }
       if (distance === 1.8 && diff_index === 0){

@@ -22,6 +22,7 @@ export class RoundStartPanel extends React.Component {
 
     // [EditByRan] Implement must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
+    // [EditByRan] Implement the ban-take-back feature.
     render() {
         const {
             aiControllers,
@@ -38,6 +39,7 @@ export class RoundStartPanel extends React.Component {
             mustPlay10,
             mustPlayK,
             chaoDiPi,
+            banTB,
             playerRankScores,
             playerRankCycles,
             winningPlayerIds,
@@ -156,11 +158,11 @@ export class RoundStartPanel extends React.Component {
                     <div>
                         <i
                             className={numDecks < 10 ? 'arrow up' : 'hidden'}
-                            onClick={() => setGameConfiguration({ numDecks: numDecks + 1, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi })}
+                            onClick={() => setGameConfiguration({ numDecks: numDecks + 1, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi, banTB })}
                         />
                         <i
                             className={numDecks > 1 ? 'arrow down' : 'hidden'}
-                            onClick={() => setGameConfiguration({ numDecks: numDecks - 1, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi })}
+                            onClick={() => setGameConfiguration({ numDecks: numDecks - 1, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi, banTB })}
                         />
                         {`${numDecks} ${numDecks > 1 ? 'decks' : 'deck'}`}
                     </div>
@@ -168,33 +170,39 @@ export class RoundStartPanel extends React.Component {
                         <input
                             type="checkbox"
                             checked={findAFriend}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend: !findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend: !findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi, banTB })}
                         />
                         {"Find-a-friend"}
                         <input
                             type="checkbox"
                             checked={chaoDiPi}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi: !chaoDiPi })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi: !chaoDiPi, banTB })}
                         />
                         {"Chao-Di-Pi"}
+                        <input
+                            type="checkbox"
+                            checked={banTB}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi, banTB: !banTB })}
+                        />
+                        {"Ban take-back"}
                     </div>
                     <div>
                         <input
                             type="checkbox"
                             checked={mustPlay5}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5: !mustPlay5, mustPlay10, mustPlayK, chaoDiPi })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5: !mustPlay5, mustPlay10, mustPlayK, chaoDiPi, banTB })}
                         />
                         {"Must play rank 5 "}
                         <input
                             type="checkbox"
                             checked={mustPlay10}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10: !mustPlay10, mustPlayK, chaoDiPi })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10: !mustPlay10, mustPlayK, chaoDiPi, banTB })}
                         />
                         {"rank 10 "}
                         <input
                             type="checkbox"
                             checked={mustPlayK}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK: !mustPlayK, chaoDiPi })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK: !mustPlayK, chaoDiPi, banTB })}
                         />
                         {" rank K"}
                     </div> 

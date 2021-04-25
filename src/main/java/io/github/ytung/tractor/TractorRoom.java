@@ -125,6 +125,7 @@ public class TractorRoom {
 
         // [EditByRan] Implement must-play-rank feature.
         // [EditByRan] Implement the "Chao-Di-Pi" feature.
+        // [EditByRan] Implement the ban-take-back feature.
         r.write(JacksonEncoder.INSTANCE.encode(new FullRoomState(
             game.getPlayerIds(),
             game.getNumDecks(),
@@ -133,6 +134,7 @@ public class TractorRoom {
             game.isMustPlay10(),
             game.isMustPlayK(),
             game.isChaoDiPi(),
+            game.isBanTB(),
             game.getKittyOwnerIndex(),
             game.getRoundNumber(),
             game.getStarterPlayerIndex(),
@@ -267,6 +269,7 @@ public class TractorRoom {
 
         // [EditByRan] Implement the must-play-rank feature.
         // [EditByRan] Implement the Chao-Di-Pi feature.
+        // [EditByRan] Implement the ban-take-back feature.
         if (message instanceof GameConfigurationRequest) {
             game.setNumDecks(((GameConfigurationRequest) message).getNumDecks());
             game.setFindAFriend(((GameConfigurationRequest) message).isFindAFriend());
@@ -274,6 +277,7 @@ public class TractorRoom {
             game.setMustPlay10(((GameConfigurationRequest) message).isMustPlay10());
             game.setMustPlayK(((GameConfigurationRequest) message).isMustPlayK());
             game.setChaoDiPi(((GameConfigurationRequest) message).isChaoDiPi());
+            game.setBanTB(((GameConfigurationRequest) message).isBanTB());
             playerReadyForPlay.replaceAll((k, v) -> v=false);
             sendSync(broadcaster, new GameConfiguration(
                 game.getNumDecks(),
@@ -282,6 +286,7 @@ public class TractorRoom {
                 game.isMustPlay10(),
                 game.isMustPlayK(),
                 game.isChaoDiPi(),
+                game.isBanTB(),
                 game.getKittySize(),
                 playerReadyForPlay));
         }
@@ -537,6 +542,7 @@ public class TractorRoom {
 
     // [EditByRan] Implement must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
+    // [EditByRan] Implement the ban-take-back feature.
     private void broadcastUpdatePlayers(Broadcaster broadcaster) {
         sendSync(broadcaster, new UpdatePlayers(
             game.getPlayerIds(),
@@ -547,6 +553,7 @@ public class TractorRoom {
             game.isMustPlay10(),
             game.isMustPlayK(),
             game.isChaoDiPi(),
+            game.isBanTB(),
             game.getKittySize(),
             aiControllers.keySet(),
             humanControllers.keySet(),

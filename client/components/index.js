@@ -7,6 +7,7 @@ export * from './hoverButton/hoverButton';
 export * from './kitty/kitty';
 export * from './playerArea';
 export * from './playerNametag/playerNametag';
+export * from './rejoinPanel/rejoinPanel';
 export * from './roundInfoPanel/roundInfoPanel';
 export * from './roundStartPanel/roundStartPanel';
 export * from './settingsPanel/settingsPanel';

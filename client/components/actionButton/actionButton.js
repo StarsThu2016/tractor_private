@@ -14,8 +14,8 @@ var isWindowsMobile = (agent.indexOf("IEMobile") > 0);
 var isSmallScreen = (screen.width < 767 || (isAndroid && screen.width < 1000));
 var isUnknownMobile = (isWebkit && isSmallScreen);
 var isMobile = (isIOS || isAndroid || isNewBlackBerry || isWebOS || isWindowsMobile || isUnknownMobile);
-// isMobile = !isMobile;
 var isTablet = (isIPad || (isMobile && !isSmallScreen));
+isMobile = isMobile || isTablet;
 
 /**
  * An opinionated button that takes game-related modes as props instead of generic classes.

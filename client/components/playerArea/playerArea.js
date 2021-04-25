@@ -19,8 +19,8 @@ var isWindowsMobile = (agent.indexOf("IEMobile") > 0);
 var isSmallScreen = (screen.width < 767 || (isAndroid && screen.width < 1000));
 var isUnknownMobile = (isWebkit && isSmallScreen);
 var isMobile = (isIOS || isAndroid || isNewBlackBerry || isWebOS || isWindowsMobile || isUnknownMobile);
-// isMobile = !isMobile;
 var isTablet = (isIPad || (isMobile && !isSmallScreen));
+isMobile = isMobile || isTablet;
 
 /*
  * A higher order component that takes the given children and applies a rotation

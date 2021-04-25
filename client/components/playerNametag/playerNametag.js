@@ -15,8 +15,8 @@ var isWindowsMobile = (agent.indexOf("IEMobile") > 0);
 var isSmallScreen = (screen.width < 767 || (isAndroid && screen.width < 1000));
 var isUnknownMobile = (isWebkit && isSmallScreen);
 var isMobile = (isIOS || isAndroid || isNewBlackBerry || isWebOS || isWindowsMobile || isUnknownMobile);
-// isMobile = !isMobile;
 var isTablet = (isIPad || (isMobile && !isSmallScreen));
+isMobile = isMobile || isTablet;
 
 /**
  * The "nametag" for a single player. Shown in the game area near the player's

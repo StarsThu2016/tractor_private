@@ -170,7 +170,7 @@ export class RoundStartPanel extends React.Component {
                             checked={findAFriend}
                             onChange={() => setGameConfiguration({ numDecks, findAFriend: !findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi })}
                         />
-                        {"Find a friend mode"}
+                        {"Find-a-friend"}
                         <input
                             type="checkbox"
                             checked={chaoDiPi}

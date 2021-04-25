@@ -13,8 +13,9 @@ var isWindowsMobile = (agent.indexOf("IEMobile") > 0);
 var isSmallScreen = (screen.width < 767 || (isAndroid && screen.width < 1000));
 var isUnknownMobile = (isWebkit && isSmallScreen);
 var isMobile = (isIOS || isAndroid || isNewBlackBerry || isWebOS || isWindowsMobile || isUnknownMobile);
-// isMobile = !isMobile;
 var isTablet = (isIPad || (isMobile && !isSmallScreen));
+isMobile = isMobile || isTablet;
+
 const CARD_WIDTH = isMobile? 142 : 71;
 
 /**

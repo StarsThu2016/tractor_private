@@ -23,6 +23,14 @@ for (let i = 1; i < 100; i++){
 
 export const PLUS = Object.freeze(PLUS0);
 
+// [EditByRan] device-specific rendering
+export const SUITS_SHORT = Object.freeze({
+  'CLUB': '♣',
+  'DIAMOND': '♢',
+  'HEART': '♡',
+  'SPADE': '♠',
+});
+
 export const SUITS = Object.freeze({
   'CLUB': 'CLUBS ♣',
   'DIAMOND': 'DIAMONDS ♢',

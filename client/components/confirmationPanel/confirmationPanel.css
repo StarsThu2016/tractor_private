@@ -1,3 +1,28 @@
+/* [EditByRan] device-specific rendering */
+.confirmation_panel_mobile {
+    width: 160px;
+    background-color: orange;
+    margin-left: -100px;
+    top: 230px;
+    left: 50%;
+    position: absolute;
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+    z-index: 3;
+}
+
+.confirmation_panel_mobile button {
+    width: 70px;
+    height: 30px;
+    margin: 10px 5px 0 5px;
+}
+
+.confirmation_panel_mobile button:hover {
+    cursor: pointer;
+    background-color: lightgray;
+}
+
 .confirmation_panel {
     width: 160px;
     background-color: orange;

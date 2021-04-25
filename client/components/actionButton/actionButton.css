@@ -1,7 +1,4 @@
+/* [EditByRan] device-specific rendering */
 .action_button {
     position: absolute;
-    top: 745px;
-    left: 50%;
-    width: 120px;
-    margin-left: -73px;
 }

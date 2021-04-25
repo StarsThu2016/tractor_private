@@ -1,3 +1,22 @@
+/* [EditByRan] device-specific rendering */
+.kitty .view_kitty_button_mobile {
+    cursor: pointer;
+    position: absolute;
+    bottom: 75px;
+    right: 68px;
+    width: 63px;
+    height: 48px;
+    background-image: url("../../assets/images/kitty.png");
+    background-size: cover;
+}
+
+.kitty .view_kitty_button_mobile:hover {
+    bottom: 76px;
+    right: 69px;
+    width: 61px;
+    height: 46px;
+}
+
 .kitty .view_kitty_button {
     cursor: pointer;
     position: absolute;
@@ -14,6 +33,12 @@
     right: 118px;
     width: 80px;
     height: 60px;
+}
+
+.kitty .kitty_cards_mobile {
+    position: absolute;
+    top: 200px;
+    right: 600px;
 }
 
 .kitty .kitty_cards {

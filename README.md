@@ -22,6 +22,7 @@
 * Change the background image to a prettier one.
 
 ## Bugs and Future Improvements
+* Revert the ReJoin panel.
 * If nobody claims and a trump is picked by uncovering the kitty, somebody other than the kitty owner may be able to see the kitty. Refreshing the webpage can fix the bug. 
 * First game with rank modifications, the union of all ranks is declarable for every one. But one should only decalre his/her own rank.
 * Allow/ban take-back.

@@ -449,7 +449,7 @@ public class TractorRoom {
                         game.getCurrentPlayerIndex(),
                         game.getDeck(),
                         game.getPlayerHands()));
-                    Uninterruptibles.sleepUninterruptibly((DEV_MODE ? 10 : 1200) / game.getPlayerIds().size(), TimeUnit.MILLISECONDS);
+                    Uninterruptibles.sleepUninterruptibly((DEV_MODE ? 10 : 800) / game.getPlayerIds().size(), TimeUnit.MILLISECONDS);
                 }
             }
         };

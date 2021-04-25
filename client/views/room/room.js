@@ -22,6 +22,21 @@ import {
 } from '../../components';
 import { SUITS } from '../../lib/cards';
 
+// [EditByRan]: device-specific rendering
+var agent = navigator.userAgent;
+var isWebkit = (agent.indexOf("AppleWebKit") > 0);
+var isIPad = (agent.indexOf("iPad") > 0);
+var isIOS = (agent.indexOf("iPhone") > 0 || agent.indexOf("iPod") > 0);
+var isAndroid = (agent.indexOf("Android")  > 0);
+var isNewBlackBerry = (agent.indexOf("AppleWebKit") > 0 && agent.indexOf("BlackBerry") > 0);
+var isWebOS = (agent.indexOf("webOS") > 0);
+var isWindowsMobile = (agent.indexOf("IEMobile") > 0);
+var isSmallScreen = (screen.width < 767 || (isAndroid && screen.width < 1000));
+var isUnknownMobile = (isWebkit && isSmallScreen);
+var isMobile = (isIOS || isAndroid || isNewBlackBerry || isWebOS || isWindowsMobile || isUnknownMobile);
+// isMobile = !isMobile;
+var isTablet = (isIPad || (isMobile && !isSmallScreen));
+
 export class Room extends React.Component {
   constructor(props) {
     super(props);
@@ -248,14 +263,24 @@ export class Room extends React.Component {
 
   render() {
     const {roomCode} = this.props;
-    return (
-      <div>
+
+    // [EditByRan]: device-specific rendering
+    if (isMobile) {
+      return (
         <div>
-          <h3>Room Code: {roomCode}</h3>
+          {this.renderGameArea()}
         </div>
-        {this.renderGameArea()}
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div>
+          <div>
+            <h3>Room Code: {roomCode}</h3>
+          </div>
+          {this.renderGameArea()}
+        </div>
+      );
+    }
   }
 
   renderGameArea() {
@@ -371,6 +396,12 @@ export class Room extends React.Component {
       currentRoundScores,
       currentRoundPenalties,
       currentTrump,
+      numDecks,
+      findAFriend,
+      mustPlay5,
+      mustPlay10,
+      mustPlayK,
+      chaoDiPi,
     } = this.state;
     return <RoundInfoPanel
       playerNames={playerNames}
@@ -382,6 +413,12 @@ export class Room extends React.Component {
       currentRoundScores={currentRoundScores}
       currentRoundPenalties={currentRoundPenalties}
       currentTrump={currentTrump}
+      numDecks={numDecks}
+      findAFriend={findAFriend}
+      mustPlay5={mustPlay5}
+      mustPlay10={mustPlay10}
+      mustPlayK={mustPlayK}
+      chaoDiPi={chaoDiPi}
     />;
   }
 
@@ -394,6 +431,9 @@ export class Room extends React.Component {
     }
     // [EditByRan] Implement the must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
+    // [EditByRan] device-specific rendering: eliminate GameInfo
+    if (isMobile)
+      return;
     return <GameInfoPanel
       playerNames={playerNames}
       myPlayerId={myPlayerId}
@@ -406,11 +446,9 @@ export class Room extends React.Component {
       chaoDiPi={chaoDiPi}
       playerRankScores={playerRankScores}
       playerRankCycles={playerRankCycles}
-      status={status}
     />;
   }
 
-  // [EditByRan] Implement the must-play-rank feature.
   // [EditByRan] Implement the "Chao-Di-Pi" feature.
   renderPlayerNames() {
     const {
@@ -418,28 +456,27 @@ export class Room extends React.Component {
       myPlayerId,
       playerIds,
       findAFriend,
-      mustPlay5,
-      mustPlay10,
-      mustPlayK,
       chaoDiPi,
       status,
       currentPlayerIndex,
       isDeclaringTeam,
       currentRoundScores,
+      playerRankScores,
+      playerRankCycles,
     } = this.state;
     if (status === 'START_ROUND') {
       return;
     }
-    // [EditByRan] Implement the must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
+    // [EditByRan] device-specific rendering
     return playerIds.map(playerId => {
       return <PlayerArea
         key={`playerName${playerId}`}
         myPlayerId={myPlayerId}
         playerIds={playerIds}
         playerId={playerId}
-        distance={0.91}
-        shiftX={playerId === myPlayerId ? 240 : 0}
+        distance={isMobile ? (playerId === myPlayerId ? 1.8 : 1.1) : 0.91}
+        shiftX={isMobile ? 0 : (playerId === myPlayerId ? 240 : 0)}
         isText={true}
       >
         <PlayerNametag
@@ -447,14 +484,13 @@ export class Room extends React.Component {
           playerNames={playerNames}
           playerIds={playerIds}
           findAFriend={findAFriend}
-          mustPlay5={mustPlay5}
-          mustPlay10={mustPlay10}
-          mustPlayK={mustPlayK}
           chaoDiPi={chaoDiPi}
           status={status}
           currentPlayerIndex={currentPlayerIndex}
           isDeclaringTeam={isDeclaringTeam}
           currentRoundScores={currentRoundScores}
+          playerRankScores={playerRankScores}
+          playerRankCycles={playerRankCycles}
         />
       </PlayerArea>;
     });
@@ -485,16 +521,23 @@ export class Room extends React.Component {
         cancel={() => this.setState({ confirmSpecialPlayCards: undefined })}
       />;
     }
+    // [EditByRan]: device-specific rendering, eliminate most notifications.
+    if (isMobile)
+      return;
     if (Object.entries(notifications).length > 0) {
-      return Object.entries(notifications).map(([id, message]) =>
+      return isMobile ? Object.entries(notifications).map(([id, message]) =>
+        <div key={id} className='notification_mobile warn'>{message}</div>,
+      ) : Object.entries(notifications).map(([id, message]) =>
         <div key={id} className='notification warn'>{message}</div>,
       );
     }
     if (status === 'DRAW') {
-      return <div className='notification'>{"Select one or more cards to declare"}</div>
+      return isMobile ? <div className='notification_mobile'>{"Select one or more cards to declare"}</div> :
+        <div className='notification'>{"Select one or more cards to declare"}</div>
     }
     if (!playerReadyForPlay[myPlayerId] && status === 'DRAW_KITTY') {
-      return <div className='notification'>{"Select card(s) to declare, or click Pass"}</div>
+      return isMobile ? <div className='notification_mobile'>{"Select card(s) to declare, or click Pass"}</div> :
+        <div className='notification'>{"Select card(s) to declare, or click Pass"}</div>
     }
 
     // [EditByRan] Chao-Di-Pi phase
@@ -502,9 +545,11 @@ export class Room extends React.Component {
       // Two types of players are not allowed to declare: the KittyOwner, DeclaredCardsOwner
       if ((declaredCards.length > 0 && declaredCards[declaredCards.length - 1].playerId === myPlayerId) ||
           kittyOwnerIndex === myPlayerId) {
-        return <div className='notification'>{"You are not allowed to declare, please click Pass"}</div>
+        return isMobile ? <div className='notification_mobile'>{"You are not allowed to declare, please click Pass"}</div> :
+          <div className='notification'>{"You are not allowed to declare, please click Pass"}</div>
       } else { // The player is allowed to declare
-        return <div className='notification'>{"Chao-Di-Pi phase: select 2+ card(s) to declare, or click Pass"}</div>
+        return isMobile ? <div className='notification_mobile'>{"Chao-Di-Pi phase: select 2+ card(s) to declare, or click Pass"}</div> :
+          <div className='notification'>{"Chao-Di-Pi phase: select 2+ card(s) to declare, or click Pass"}</div>
       }
     }
 
@@ -512,13 +557,16 @@ export class Room extends React.Component {
     const playerId = playerIds[currentPlayerIndex];
     if (status === 'MAKE_KITTY' || status === 'SPECIAL_MAKE_KITTY') {
       if (playerId === myPlayerId) {
-        return <div className='notification'>{`Select ${kittySize} cards to put in the kitty`}</div>
+        return isMobile ? <div className='notification_mobile'>{`Select ${kittySize} cards to put in the kitty`}</div> :
+          <div className='notification'>{`Select ${kittySize} cards to put in the kitty`}</div>
       } else {
-        return <div className='notification'>{`${playerNames[playerId]} is selecting cards for the kitty`}</div>
+        return isMobile ? <div className='notification_mobile'>{`${playerNames[playerId]} is selecting cards for the kitty`}</div> :
+          <div className='notification'>{`${playerNames[playerId]} is selecting cards for the kitty`}</div>
       }
     }
     if (status === 'PLAY' && playerId === myPlayerId) {
-      return <div className='notification short'>{'Your turn'}</div>
+      return isMobile ? <div className='notification_mobile short'>{'Your turn'}</div> :
+        <div className='notification short'>{'Your turn'}</div>
     }
   }
 
@@ -550,13 +598,17 @@ export class Room extends React.Component {
           declaredCards[declaredCards.length - 1].
               cardIds.every((declaredCardId) => cardId !== declaredCardId));
 
+      // [EditByRan] device-specific rendering: do not render others' cards in hand
+      if (isMobile && myPlayerId !== playerId){
+        return;
+      }
       return (
         <PlayerArea
           key={`playerArea${playerId}`}
           myPlayerId={myPlayerId}
           playerIds={playerIds}
           playerId={playerId}
-          distance={0.6}
+          distance={isMobile ? 1 : 0.6}
         >
           <Cards
             cardIds={nonDeclaredCards}
@@ -583,12 +635,13 @@ export class Room extends React.Component {
       return;
     }
     const latestDeclaredCards = declaredCards[declaredCards.length - 1];
+    // [EditByRan] device-specific rendering
     return <div>
       <PlayerArea
         myPlayerId={myPlayerId}
         playerIds={playerIds}
         playerId={latestDeclaredCards.playerId}
-        distance={0.3}
+        distance={isMobile ? 0.2 : 0.3}
       >
         <Cards
           cardIds={latestDeclaredCards.cardIds}
@@ -604,12 +657,13 @@ export class Room extends React.Component {
     if (status !== 'EXPOSE_BOTTOM_CARDS') {
       return;
     }
+    // [EditByRan] device-specific rendering
     return <div>
       <PlayerArea
         myPlayerId={myPlayerId}
         playerIds={playerIds}
         playerId={playerIds[starterPlayerIndex]}
-        distance={0.3}
+        distance={isMobile ? 0.2 : 0.3}
       >
         <Cards
           cardIds={exposedBottomCards}
@@ -806,11 +860,20 @@ export class Room extends React.Component {
     if (!pastTricks || pastTricks.length === 0) {
       return;
     }
-    return <HoverButton
-      className='last_trick_button'
-      onHoverStart={() => this.setState({showPreviousTrick: true})}
-      onHoverEnd={() => this.setState({showPreviousTrick: false})}
-    />
+    // [EditByRan] device-specific rendering
+    if (isMobile) {
+      return <HoverButton
+        className='last_trick_button_mobile'
+        onHoverStart={() => this.setState({showPreviousTrick: true})}
+        onHoverEnd={() => this.setState({showPreviousTrick: false})}
+      />;
+    } else {
+      return <HoverButton
+        className='last_trick_button'
+        onHoverStart={() => this.setState({showPreviousTrick: true})}
+        onHoverEnd={() => this.setState({showPreviousTrick: false})}
+      />;
+    }
   }
 
   setName = name => {

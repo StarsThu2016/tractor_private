@@ -41,7 +41,7 @@ export class RoundInfoPanel extends React.Component {
 
         // [EditByRan] device-specific rendering: merge GameInfo into RoundInfo
         if (isMobile) {
-          var trumpSuit = (currentTrump.suit === 'JOKER') ? 'NO TRUMP' : SUITS_SHORT[currentTrump.suit];
+          var trumpSuit = (currentTrump.suit === 'JOKER') ? 'NO TR.' : SUITS_SHORT[currentTrump.suit];
           return (
               <div className='round_info_panel_mobile'>
                 <div>Trump: {VALUES[currentTrump.value]} {trumpSuit}</div>

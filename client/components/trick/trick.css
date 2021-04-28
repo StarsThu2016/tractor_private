@@ -8,3 +8,14 @@
     left: -24px;
     bottom: 0px;
 }
+
+.trick .winner_mobile {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background-image: url("../../assets/images/crown.png");
+    background-size: cover;
+    display: inline-block;
+    left: -12px;
+    bottom: 0px;
+}

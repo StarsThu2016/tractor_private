@@ -21,14 +21,14 @@ export class Cards extends React.Component {
 
         // [EditByRan] device-specific rendering
         var WIDTH = 1200;
-        var CARD_WIDTH = isMobile? 142 : 71;
-        var interCardDistance = isMobile ? (faceUp ? 29 : 18) : (faceUp ? 15 : 9);
+        var CARD_WIDTH = (isMobile && adaptive)? 142 : 71;
+        var interCardDistance = (isMobile && adaptive) ? (faceUp ? 29 : 18) : (faceUp ? 15 : 9);
         if (isMobile && adaptive){
           if (cardIds.length - 1 > 25) {  // Allow overlapping to button if too many cards
-            interCardDistance = Math.floor((WIDTH-30-CARD_WIDTH)/(cardIds.length - 1));
+            interCardDistance = Math.floor((WIDTH-20-CARD_WIDTH)/(cardIds.length - 1));
             interCardDistance = Math.min(interCardDistance, 70);
           } else { // Disallow overlapping to button within 25 cards
-            interCardDistance = Math.floor((WIDTH-250-CARD_WIDTH)/(cardIds.length - 1));
+            interCardDistance = Math.floor((WIDTH-20-CARD_WIDTH)/(cardIds.length - 1));
             interCardDistance = Math.min(interCardDistance, 70);
           }
         }
@@ -38,7 +38,7 @@ export class Cards extends React.Component {
                 const x = -totalWidth / 2 + interCardDistance * index;
                 const y = selectedCardIds && selectedCardIds[cardId] ? -20 : 0;
                 const src = faceUp ?
-                    getCardImageSrc(cardsById[cardId]) : getFaceDownCardImageSrc();
+                    getCardImageSrc(cardsById[cardId], adaptive) : getFaceDownCardImageSrc(adaptive);
                 const onClick = selectCards ? () => selectCards(cardId) : undefined;
                 return (
                     <img

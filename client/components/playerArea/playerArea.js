@@ -52,82 +52,68 @@ export class PlayerArea extends React.Component {
     const playerIndex = playerIds.indexOf(playerId);
     const myIndex = playerIds.indexOf(myPlayerId);
 
+    var CARD_HEIGHT = 192;
+    var CARD_WIDTH = 142;
     var centerPoint = {x: 0, y: 0};
     var angle = (myIndex - playerIndex) * 360. / playerIds.length;
-    var shiftX0 = shiftX;
-    if (isMobile) {
+    var shiftX0 = 0;
+    if (isMobile && playerIds.length >= 4 && playerIds.length <= 6) {
       var distance0 = distance;
       // 4p: [-1, 0, 1, 2], 5p: [-1, 0, 1, 2, 3], 6p: [-1, 0, 1, 2, 3, 4]
       var diff_index = (playerIndex-myIndex >= -1) ? (playerIndex - myIndex) : (playerIndex + playerIds.length - myIndex);
       if (diff_index >= playerIds.length - 1 && playerIds.length > 1) {
         diff_index = diff_index - playerIds.length;
       }
+
       if (distance === 1.8 && diff_index === 0){
         // my name
-        distance0 === 1.8;
+        centerPoint = {x: WIDTH/2, y: HEIGHT - 20};
       } else if (distance === 1.1 && (diff_index === 1 || diff_index === -1)){
         // side names: do not place too wide
-        distance0 = 1.0;
+        centerPoint = {
+          x: WIDTH/2 + diff_index * (WIDTH / 2 - 10 - 142),
+          y: HEIGHT - (10 + CARD_HEIGHT/2 + 20 + CARD_HEIGHT + 20),
+        };
       } else if (distance === 1.1) {
         // opposite name
-        distance0 === 1.05;
+        centerPoint = {
+          x: WIDTH/2,
+          y: HEIGHT - (20 + CARD_HEIGHT/2 + 20 + CARD_HEIGHT/2 + 20 + CARD_HEIGHT + 20),
+        };
       } else if (distance === 1){
         // my hands (others' hands won't be rendered)
-        distance0 = 1;
+        centerPoint = {
+          x: WIDTH/2,
+          y: HEIGHT - (CARD_HEIGHT + 20),
+        };
       } else if (distance === 0.2 && diff_index === 0){
         // my trick/decalre/expose card
-        distance0 = 0.22;
+        centerPoint = {
+          x: WIDTH/2,
+          y: HEIGHT - (CARD_HEIGHT/2 + 20 + CARD_HEIGHT + 20),
+        };
       } else if (distance === 0.2 && (diff_index === 1 || diff_index === -1)){
-        // my trick/decalre/expose card
-        distance0 = 0.64;
+        // side trick/decalre/expose card
+        centerPoint = {
+          x: WIDTH/2 + diff_index * (WIDTH / 2 - 20 - CARD_HEIGHT/2 - 142),
+          y: HEIGHT - (10 + CARD_HEIGHT/2 + 20 + CARD_HEIGHT + 20),
+        };
       } else if (distance === 0.2){
         // opposite trick/decalre/expose card
-        distance0 = 0.22;
+        centerPoint = {
+          x: WIDTH/2,
+          y: HEIGHT - (20 + CARD_HEIGHT/2 + 20 + CARD_HEIGHT + 20),
+        };
       }
-      var playerIds_length = 4;
-      if (diff_index === 0) {
-        angle = 0;
-      } else if (diff_index === 1 || diff_index === -1) {
-        angle = (-diff_index) * 360. / playerIds_length;
-      } else {
-        angle = 2 * 360. / playerIds_length;
-      }
+      angle = (diff_index<=1) ? (-diff_index) * 360. / 4 : 180;
       if (playerIds.length === 5 && diff_index === 2) {
         shiftX0 = 170;
-        centerPoint = {
-          x: 25 + (WIDTH - 50) * (0.5 + 0.5 * Math.sin((2) * 2 * Math.PI / playerIds_length) * distance0),
-          y: 25 + (HEIGHT - 285) * (0.5 + 0.5 * Math.cos((2) * 2 * Math.PI / playerIds_length) * distance0),
-        };
       } else if (playerIds.length === 5 && diff_index === 3) {
         shiftX0 = -170;
-        centerPoint = {
-          x: 25 + (WIDTH - 50) * (0.5 + 0.5 * Math.sin((2) * 2 * Math.PI / playerIds_length) * distance0),
-          y: 25 + (HEIGHT - 285) * (0.5 + 0.5 * Math.cos((2) * 2 * Math.PI / playerIds_length) * distance0),
-        };
       } else if (playerIds.length === 6 && diff_index === 2) {
         shiftX0 = 250;
-        centerPoint = {
-          x: 25 + (WIDTH - 50) * (0.5 + 0.5 * Math.sin((2) * 2 * Math.PI / playerIds_length) * distance0),
-          y: 25 + (HEIGHT - 285) * (0.5 + 0.5 * Math.cos((2) * 2 * Math.PI / playerIds_length) * distance0),
-        };
-      } else if (playerIds.length === 6 && diff_index === 3) {
-        shiftX0 = 0;
-        centerPoint = {
-          x: 25 + (WIDTH - 50) * (0.5 + 0.5 * Math.sin((2) * 2 * Math.PI / playerIds_length) * distance0),
-          y: 25 + (HEIGHT - 285) * (0.5 + 0.5 * Math.cos((2) * 2 * Math.PI / playerIds_length) * distance0),
-        };
-      } else if (playerIds.length === 6 && diff_index === 4) {
+      }  else if (playerIds.length === 6 && diff_index === 4) {
         shiftX0 = -250;
-        centerPoint = {
-          x: 25 + (WIDTH - 50) * (0.5 + 0.5 * Math.sin((2) * 2 * Math.PI / playerIds_length) * distance0),
-          y: 25 + (HEIGHT - 285) * (0.5 + 0.5 * Math.cos((2) * 2 * Math.PI / playerIds_length) * distance0),
-        };
-      } else {
-        shiftX0 = 0;
-        centerPoint = {
-          x: 25 + (WIDTH - 50) * (0.5 + 0.5 * Math.sin(diff_index * 2 * Math.PI / playerIds_length) * distance0),
-          y: 25 + (HEIGHT - 285) * (0.5 + 0.5 * Math.cos(diff_index * 2 * Math.PI / playerIds_length) * distance0),
-        };
       }
     } else {
       centerPoint = {

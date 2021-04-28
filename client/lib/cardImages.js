@@ -24,9 +24,9 @@ const SUITS = Object.freeze({
   'SPADE': 's',
 });
 
-function getImageSrc(name) {
+function getImageSrc(name, large = false) {
   // [EditByRan] device-specific rendering
-  var suffix = isMobile ? "_large" : ""
+  var suffix = (isMobile && large) ? "_large" : ""
   return `./images/${name}${suffix}.gif`;
 }
 
@@ -57,10 +57,10 @@ export function preloadCardImages() {
   }
 }
 
-export function getFaceDownCardImageSrc() {
-  return getImageSrc('b1fv');
+export function getFaceDownCardImageSrc(large = false) {
+  return getImageSrc('b1fv', large);
 }
 
-export function getCardImageSrc(card) {
-  return getImageSrc(getImageName(card));
+export function getCardImageSrc(card, large = false) {
+  return getImageSrc(getImageName(card), large);
 }

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { ConfirmationPanel } from '../confirmationPanel';
 import './settingsPanel.css';
+// [EditByRan] device-specific rendering
+import {isMobile} from '../../views/room';
 
 /**
  * Contains per-player game settings.
@@ -30,6 +32,21 @@ export class SettingsPanel extends React.Component {
             toggleEditPlayers, // () => void
             takeBack, // () => void
         } = this.props;
+        if (isMobile) {
+          return (
+              <div className='settings_panel'>
+                  {this.maybeRenderConfirm(forfeit, leaveRoom)}
+                  {this.renderLeaveRoomOrForfeitButton(myPlayerId, playerIds, status)}
+                  <div
+                      className={`button sound_mobile sound${soundVolume}`}
+                      onClick={() => setSoundVolume((soundVolume + 1) % 4)}
+                      title={"Sound volume"}
+                  />
+                  {this.maybeRenderEditPlayersButton(status, toggleEditPlayers)}
+                  {this.maybeRenderTakeBackButton(currentTrick, myPlayerId, banTB, takeBack)}
+              </div>
+          );
+        }
         return (
             <div className='settings_panel'>
                 {this.maybeRenderConfirm(forfeit, leaveRoom)}
@@ -70,6 +87,21 @@ export class SettingsPanel extends React.Component {
 
     renderLeaveRoomOrForfeitButton(myPlayerId, playerIds, status) {
         const { isConfirmingForfeit, isConfirmingLeave } = this.state;
+        if (isMobile) {
+          if (status === 'START_ROUND' || playerIds.indexOf(myPlayerId) === -1) {
+              return <div
+                  className='button leave_room_mobile'
+                  onClick={() => this.setState({ isConfirmingLeave: !isConfirmingLeave })}
+                  title={"Sound volume"}
+              />;
+          } else {
+              return <div
+                  className='button forfeit_mobile'
+                  onClick={() => this.setState({ isConfirmingForfeit: !isConfirmingForfeit })}
+                  title={"Forfeit"}
+              />;
+          }
+        }
         if (status === 'START_ROUND' || playerIds.indexOf(myPlayerId) === -1) {
             return <div
                 className='button leave_room'
@@ -89,6 +121,13 @@ export class SettingsPanel extends React.Component {
         if (status !== 'START_ROUND') {
             return;
         }
+        if (isMobile) {
+          return <div
+              className='button edit_players_mobile'
+              onClick={toggleEditPlayers}
+              title={"Edit players"}
+          />;
+        }
         return <div
             className='button edit_players'
             onClick={toggleEditPlayers}
@@ -101,6 +140,15 @@ export class SettingsPanel extends React.Component {
             return;
         }
         const { plays } = currentTrick;
+        if (isMobile) {
+          if (plays.length > 0 && plays[plays.length - 1].playerId === myPlayerId) {
+              return <div
+                  className='button undo_mobile'
+                  onClick={takeBack}
+                  title={"Undo"}
+              />;
+          }
+        }
         if (plays.length > 0 && plays[plays.length - 1].playerId === myPlayerId) {
             return <div
                 className='button undo'

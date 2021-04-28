@@ -2,21 +2,8 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { ORDINALS, SUITS, VALUES, SUITS_SHORT} from '../../lib/cards';
 import './roundInfoPanel.css';
-
-// [EditByRan]: device-specific rendering
-var agent = navigator.userAgent;
-var isWebkit = (agent.indexOf("AppleWebKit") > 0);
-var isIPad = (agent.indexOf("iPad") > 0);
-var isIOS = (agent.indexOf("iPhone") > 0 || agent.indexOf("iPod") > 0);
-var isAndroid = (agent.indexOf("Android")  > 0);
-var isNewBlackBerry = (agent.indexOf("AppleWebKit") > 0 && agent.indexOf("BlackBerry") > 0);
-var isWebOS = (agent.indexOf("webOS") > 0);
-var isWindowsMobile = (agent.indexOf("IEMobile") > 0);
-var isSmallScreen = (screen.width < 767 || (isAndroid && screen.width < 1000));
-var isUnknownMobile = (isWebkit && isSmallScreen);
-var isMobile = (isIOS || isAndroid || isNewBlackBerry || isWebOS || isWindowsMobile || isUnknownMobile);
-var isTablet = (isIPad || (isMobile && !isSmallScreen));
-isMobile = isMobile || isTablet;
+// [EditByRan] device-specific rendering
+import {isMobile} from '../../views/room';
 
 /**
  * A panel that displays info relevant only to the current round: the current
@@ -52,20 +39,11 @@ export class RoundInfoPanel extends React.Component {
             }
         });
 
-        // [EditByRan]: device-specific rendering: merge GameInfo into RoundInfo
+        // [EditByRan] device-specific rendering: merge GameInfo into RoundInfo
         if (isMobile) {
           var trumpSuit = (currentTrump.suit === 'JOKER') ? 'NO TRUMP' : SUITS_SHORT[currentTrump.suit];
           return (
               <div className='round_info_panel_mobile'>
-                <div>
-                  {`${numDecks}${numDecks > 1 ? 'd' : 'd'}`}
-                  {findAFriend ? '·FAF' : undefined}
-                  {chaoDiPi ? '·CDP' : undefined}
-                  {mustPlay5 || mustPlay10 || mustPlayK ? '·MP' : undefined}
-                  {mustPlay5 ? ' 5' : undefined}
-                  {mustPlay10 ? ' 10' : undefined}
-                  {mustPlayK ? ' K' : undefined}
-                </div>
                 <div>Trump: {VALUES[currentTrump.value]} {trumpSuit}</div>
                 <div>Starter: {this.renderPlayerId(playerIds[starterPlayerIndex])}</div>
                 <div>Points: {opponentsPoints}</div>
@@ -90,6 +68,17 @@ export class RoundInfoPanel extends React.Component {
     maybeRenderFindAFriendDeclaration(findAFriendDeclaration) {
         if (!findAFriendDeclaration) {
             return;
+        }
+        if (isMobile){
+          return (
+             <div>
+                {findAFriendDeclaration.declarations.map((declaration, index) => {
+                    return <div key={`declaration${index}`} className={classNames({ 'satisfied': declaration.satisfied })}>
+                        {'F: ' + this.renderDeclaration(declaration)}
+                    </div>;
+                })}
+            </div>
+          );
         }
         return (
             <div className="section">
@@ -122,6 +111,18 @@ export class RoundInfoPanel extends React.Component {
             .filter(playerId => currentRoundPenalties[playerId] > 0);
         if (playerIdsWithPenalties.length === 0) {
             return;
+        }
+        if (isMobile){
+          return (
+              <div>
+                  {playerIdsWithPenalties.map((playerId, index) => {
+                      return <div key={`penalty${index}`}>
+                          {'P: ' + this.renderPlayerId(playerId)}
+                          {` ${currentRoundPenalties[playerId]} points`}
+                      </div>;
+                  })}
+              </div>
+          );
         }
         return (
             <div className="section">

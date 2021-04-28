@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { VALUES, PLUS } from '../../lib/cards';
 import './roundStartPanel.css';
+import {isMobile0} from '../../views/room';
 
 /**
  * The panel shown right before the first round starts, and between rounds.
@@ -23,6 +24,7 @@ export class RoundStartPanel extends React.Component {
     // [EditByRan] Implement must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
     // [EditByRan] Implement the ban-take-back feature.
+    // [EditByRan] Allow PC users to use mobile UI.
     render() {
         const {
             aiControllers,
@@ -40,6 +42,7 @@ export class RoundStartPanel extends React.Component {
             mustPlayK,
             chaoDiPi,
             banTB,
+            mobileUI,
             playerRankScores,
             playerRankCycles,
             winningPlayerIds,
@@ -47,6 +50,7 @@ export class RoundStartPanel extends React.Component {
             setPlayerScore, // (PlayerId, boolean) => void
             removePlayer, // playerId => void
             setGameConfiguration, // { numDecks, findAFriend } => void
+            setMobileUI,
             addAi,
             setReadyForPlay, // boolean => void
         } = this.props;
@@ -69,7 +73,6 @@ export class RoundStartPanel extends React.Component {
         const playersNotReadyForPlay = Object.entries(playerReadyForPlay)
             .filter(([_playerId, ready]) => !ready)
             .map(([playerId, _ready]) => playerNames[playerId]);
-
         return (
             <div className='round_start_panel'>
                 <div className='title'>{'Tractor'}</div>
@@ -205,7 +208,15 @@ export class RoundStartPanel extends React.Component {
                             onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK: !mustPlayK, chaoDiPi, banTB })}
                         />
                         {" rank K"}
-                    </div> 
+                    </div>
+                    <div className={!isMobile0 ? '' : 'hidden'}>
+                        <input
+                            type="checkbox"
+                            checked={mobileUI}
+                            onChange={() => setMobileUI(!mobileUI)}
+                        />
+                        {"Mobile UI"}
+                    </div>
                 </div>
                 <div
                     className={iAmReadyForPlay ?

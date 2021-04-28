@@ -79,6 +79,7 @@
     height: 60px;
     background-image: url("../../assets/images/last_trick.png");
     background-size: cover;
+    z-index: 6;
 }
 
 .game_area .last_trick_button_mobile:hover {
@@ -86,6 +87,7 @@
     right: 11px;
     width: 46px;
     height: 58px;
+    z-index: 6;
 }
 
 .game_area .last_trick_button {

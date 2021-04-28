@@ -8,6 +8,7 @@
     height: 48px;
     background-image: url("../../assets/images/kitty.png");
     background-size: cover;
+    z-index: 6;
 }
 
 .kitty .view_kitty_button_mobile:hover {
@@ -15,6 +16,7 @@
     right: 69px;
     width: 61px;
     height: 46px;
+    z-index: 6;
 }
 
 .kitty .view_kitty_button {

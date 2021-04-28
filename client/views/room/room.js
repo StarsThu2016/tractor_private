@@ -23,7 +23,7 @@ import {
 } from '../../components';
 import { SUITS } from '../../lib/cards';
 
-// [EditByRan]: device-specific rendering
+// [EditByRan] device-specific rendering
 var agent = navigator.userAgent;
 var isWebkit = (agent.indexOf("AppleWebKit") > 0);
 var isIPad = (agent.indexOf("iPad") > 0);
@@ -34,9 +34,9 @@ var isWebOS = (agent.indexOf("webOS") > 0);
 var isWindowsMobile = (agent.indexOf("IEMobile") > 0);
 var isSmallScreen = (screen.width < 767 || (isAndroid && screen.width < 1000));
 var isUnknownMobile = (isWebkit && isSmallScreen);
-var isMobile = (isIOS || isAndroid || isNewBlackBerry || isWebOS || isWindowsMobile || isUnknownMobile);
-var isTablet = (isIPad || (isMobile && !isSmallScreen));
-isMobile = isMobile || isTablet;
+export var isMobile0 = (isIPad || isIOS || isAndroid || isNewBlackBerry || isWebOS || isWindowsMobile || isUnknownMobile);
+export var isMobile = isMobile0;
+// var isTablet = (isIPad || (isMobile && !isSmallScreen));
 
 export class Room extends React.Component {
   constructor(props) {
@@ -57,6 +57,8 @@ export class Room extends React.Component {
       soundVolume: 1, // 0, 1, 2, or 3
       isEditingPlayers: false, // boolean
       localName: undefined, // string
+      // [EditByRan] Allow PC users to use mobile UI.
+      mobileUI: false,
 
       // game state (same as server)
       playerIds: [], // PlayerId[]
@@ -267,7 +269,7 @@ export class Room extends React.Component {
   render() {
     const {roomCode} = this.props;
 
-    // [EditByRan]: device-specific rendering
+    // [EditByRan] device-specific rendering
     if (isMobile) {
       return (
         <div>
@@ -347,8 +349,9 @@ export class Room extends React.Component {
       mustPlay5,
       mustPlay10,
       mustPlayK,
-      banTB,
       chaoDiPi,
+      banTB,
+      mobileUI,
       playerRankScores,
       playerRankCycles,
       winningPlayerIds,
@@ -358,6 +361,7 @@ export class Room extends React.Component {
       // [EditByRan] Implement the must-play-rank feature.
       // [EditByRan] Implement the "Chao-Di-Pi" feature.
       // [EditByRan] Implement the ban-take-back feature.
+      // [EditByRan] Allow PC users to use mobile UI.
       return <RoundStartPanel
         aiControllers={aiControllers}
         humanControllers={humanControllers}
@@ -374,11 +378,13 @@ export class Room extends React.Component {
         mustPlayK={mustPlayK}
         chaoDiPi={chaoDiPi}
         banTB={banTB}
+        mobileUI={mobileUI}
         playerRankScores={playerRankScores}
         playerRankCycles={playerRankCycles}
         winningPlayerIds={winningPlayerIds}
         setPlayerOrder={playerIds => this.connection.send({ PLAYER_ORDER: { playerIds }})}
         setName={this.setName}
+        setMobileUI={this.setMobileUI}
         setPlayerScore={(playerId, increment) => this.connection.send({ PLAYER_SCORE: { playerId, increment }})}
         removePlayer={playerId => this.connection.send({ REMOVE_PLAYER: { playerId } })}
         setGameConfiguration={gameConfiguration => this.connection.send({ GAME_CONFIGURATION: gameConfiguration })}
@@ -538,7 +544,7 @@ export class Room extends React.Component {
         cancel={() => this.setState({ confirmSpecialPlayCards: undefined })}
       />;
     }
-    // [EditByRan]: device-specific rendering, eliminate most notifications.
+    // [EditByRan] device-specific rendering, eliminate most notifications.
     if (isMobile)
       return;
     if (Object.entries(notifications).length > 0) {
@@ -638,6 +644,7 @@ export class Room extends React.Component {
                 [cardId]: !selectedCardIds[cardId],
               },
             }) : undefined}
+            adaptive={playerId === myPlayerId}
           />
         </PlayerArea>
       );
@@ -898,6 +905,11 @@ export class Room extends React.Component {
     this.setState({ localName: name });
     this.connection.send({ SET_NAME: { name } });
     window.localStorage.setItem('tractor_name', name);
+  }
+  // [EditByRan] Allow PC users to use mobile UI.
+  setMobileUI = mobi => {
+    this.setState({ mobileUI: mobi });
+    isMobile = isMobile0 || mobi;
   }
 }
 

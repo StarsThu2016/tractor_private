@@ -1,22 +1,7 @@
 import * as React from 'react';
 import {getCardImageSrc, getFaceDownCardImageSrc} from '../../lib/cardImages';
-
 // [EditByRan] device-specific rendering
-var agent = navigator.userAgent;
-var isWebkit = (agent.indexOf("AppleWebKit") > 0);
-var isIPad = (agent.indexOf("iPad") > 0);
-var isIOS = (agent.indexOf("iPhone") > 0 || agent.indexOf("iPod") > 0);
-var isAndroid = (agent.indexOf("Android")  > 0);
-var isNewBlackBerry = (agent.indexOf("AppleWebKit") > 0 && agent.indexOf("BlackBerry") > 0);
-var isWebOS = (agent.indexOf("webOS") > 0);
-var isWindowsMobile = (agent.indexOf("IEMobile") > 0);
-var isSmallScreen = (screen.width < 767 || (isAndroid && screen.width < 1000));
-var isUnknownMobile = (isWebkit && isSmallScreen);
-var isMobile = (isIOS || isAndroid || isNewBlackBerry || isWebOS || isWindowsMobile || isUnknownMobile);
-var isTablet = (isIPad || (isMobile && !isSmallScreen));
-isMobile = isMobile || isTablet;
-
-const CARD_WIDTH = isMobile? 142 : 71;
+import {isMobile} from '../../views/room';
 
 /**
  * Renders one or more cards.
@@ -30,11 +15,23 @@ export class Cards extends React.Component {
             cardsById,
             faceUp, // boolean
             selectCards, // cardId -> void
+            adaptive = false,
             ...otherProps
         } = this.props;
 
         // [EditByRan] device-specific rendering
+        var WIDTH = 1200;
+        var CARD_WIDTH = isMobile? 142 : 71;
         var interCardDistance = isMobile ? (faceUp ? 29 : 18) : (faceUp ? 15 : 9);
+        if (isMobile && adaptive){
+          if (cardIds.length - 1 > 25) {  // Allow overlapping to button if too many cards
+            interCardDistance = Math.floor((WIDTH-30-CARD_WIDTH)/(cardIds.length - 1));
+            interCardDistance = Math.min(interCardDistance, 70);
+          } else { // Disallow overlapping to button within 25 cards
+            interCardDistance = Math.floor((WIDTH-250-CARD_WIDTH)/(cardIds.length - 1));
+            interCardDistance = Math.min(interCardDistance, 70);
+          }
+        }
         const totalWidth = CARD_WIDTH + interCardDistance * (cardIds.length - 1);
         const cardImgs = cardIds
             .map((cardId, index) => {

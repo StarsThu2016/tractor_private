@@ -1,6 +1,6 @@
 /* Global CSS styling */
 
-/* [EditByRan] Ban user select to improve mobile experience */
+/* [EditByRan] Ban user select to improve mobile experience. For text area, allow it. */
 * {
   -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -9,6 +9,13 @@
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
+}
+
+textarea { -webkit-user-select: text !important;
+            -khtml-user-select: text !important;
+              -moz-user-select: text !important;
+               -ms-user-select: text !important;
+                   user-select: text !important;
 }
 
 :root {

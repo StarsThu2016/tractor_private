@@ -201,13 +201,13 @@ export class RoundStartPanel extends React.Component {
                             checked={mustPlay10}
                             onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10: !mustPlay10, mustPlayK, chaoDiPi, banTB })}
                         />
-                        {"rank 10 "}
+                        {"Rank 10 "}
                         <input
                             type="checkbox"
                             checked={mustPlayK}
                             onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK: !mustPlayK, chaoDiPi, banTB })}
                         />
-                        {" rank K"}
+                        {"Rank K"}
                     </div>
                     <div className={!isMobile0 ? '' : 'hidden'}>
                         <input

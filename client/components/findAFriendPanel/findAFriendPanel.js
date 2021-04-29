@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { ORDINALS, SUITS, VALUES } from '../../lib/cards';
 import "./findAFriendPanel.css";
+// [EditByRan] device-specific rendering
+import {isMobile} from '../../views/room';
 
 /**
  * Renders a panel to allow the starter to select N friends.
@@ -22,6 +24,26 @@ export class FindAFriendPanel extends React.Component {
     render() {
         const { playerIds, numDecks, setFindAFriendDeclaration } = this.props;
         const numFriends = this.getNumFriends(playerIds);
+        if (isMobile) {
+          return (
+              <div className="find_a_friend_panel_mobile">
+                  <h3>Declare your friends</h3>
+                  {Array.from({length: numFriends}, (_, i) => this.renderRow(this.state[i], i, numDecks))}
+                  <button
+                      className='make_friend_button'
+                      onClick={() => setFindAFriendDeclaration(Array.from({length: numFriends}, (_, i) => {
+                          const declaration = this.state[i];
+                          return {
+                              ...declaration,
+                              suit: declaration.value.endsWith('JOKER') ? 'JOKER' : declaration.suit,
+                          };
+                      }))}
+                  >
+                      {"Submit"}
+                  </button>
+              </div>
+          )
+        }
         return (
             <div className="find_a_friend_panel">
                 <h3>Declare your friends</h3>

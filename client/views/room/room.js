@@ -537,6 +537,7 @@ export class Room extends React.Component {
     if (confirmSpecialPlayCards !== undefined) {
       return <ConfirmationPanel
         message={'That is a multiple-component play. If any component can be beaten, you will pay a 10 point penalty.'}
+        is_tall_panel={true}
         confirm={() => {
           this.connection.send({ PLAY: { cardIds: confirmSpecialPlayCards, confirmSpecialPlay: true } });
           this.setState({ confirmSpecialPlayCards: undefined });

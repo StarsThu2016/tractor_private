@@ -2,7 +2,7 @@
 .kitty .view_kitty_button_mobile {
     cursor: pointer;
     position: absolute;
-    bottom: 318px;
+    bottom: 320px;
     right: 70px;
     width: 72px;
     height: 50px;
@@ -12,7 +12,7 @@
 }
 
 .kitty .view_kitty_button_mobile:hover {
-    bottom: 319px;
+    bottom: 321px;
     right: 71px;
     width: 70px;
     height: 48px;

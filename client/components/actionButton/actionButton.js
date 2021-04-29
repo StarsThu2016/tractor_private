@@ -23,10 +23,11 @@ export class ActionButton extends React.Component {
               className={classNames('action_button', 'button', onClick ? 'primary' : 'disabled', { 'clicked': clicked })}
               style={
                 {
-                  width: '96px',
-                  height: '50px',
+                  width: '94px',
+                  height: '40px',
                   right: '20px',
-                  bottom: '222px',
+                  bottom: '232px',
+                  'border-radius': '20px',
                 }
               }
               onClick={onClick}

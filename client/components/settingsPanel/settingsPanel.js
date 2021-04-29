@@ -67,6 +67,7 @@ export class SettingsPanel extends React.Component {
         if (isConfirmingForfeit) {
             return <ConfirmationPanel
                 message='Are you sure you want to forfeit?'
+                is_tall_panel={false}
                 confirm={() => {
                     forfeit();
                     this.setState({ isConfirmingForfeit: false });
@@ -76,6 +77,7 @@ export class SettingsPanel extends React.Component {
         } else if (isConfirmingLeave) {
             return <ConfirmationPanel
                 message='Are you sure you want to leave?'
+                is_tall_panel={false}
                 confirm={() => {
                     leaveRoom();
                     this.setState({ isConfirmingLeave: false });

@@ -71,7 +71,7 @@ export class PlayerArea extends React.Component {
       } else if (distance === 1.1 && (diff_index === 1 || diff_index === -1)){
         // side names: do not place too wide
         centerPoint = {
-          x: WIDTH/2 + diff_index * (WIDTH / 2 - 10 - 142),
+          x: WIDTH/2 + diff_index * (WIDTH / 2 - 10 - 162),
           y: HEIGHT - (10 + CARD_HEIGHT/2 + 20 + CARD_HEIGHT + 20),
         };
       } else if (distance === 1.1) {
@@ -95,7 +95,7 @@ export class PlayerArea extends React.Component {
       } else if (distance === 0.2 && (diff_index === 1 || diff_index === -1)){
         // side trick/decalre/expose card
         centerPoint = {
-          x: WIDTH/2 + diff_index * (WIDTH / 2 - 20 - CARD_HEIGHT/2 - 142),
+          x: WIDTH/2 + diff_index * (WIDTH / 2 - 20 - CARD_HEIGHT/2 - 162),
           y: HEIGHT - (10 + CARD_HEIGHT/2 + 20 + CARD_HEIGHT + 20),
         };
       } else if (distance === 0.2){

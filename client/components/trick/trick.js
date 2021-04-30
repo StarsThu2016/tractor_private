@@ -32,6 +32,8 @@ export class Trick extends React.Component {
                               cardIds={cardIds}
                               cardsById={cardsById}
                               faceUp={true}
+                              adaptive={isMobile}
+                              large={false}
                           />
                           {playerId === trick.winningPlayerId ? <span className="winner_mobile" /> : undefined}
                       </PlayerArea>
@@ -53,6 +55,8 @@ export class Trick extends React.Component {
                             cardIds={cardIds}
                             cardsById={cardsById}
                             faceUp={true}
+                            adaptive={isMobile}
+                            large={false}
                         />
                         {playerId === trick.winningPlayerId ? <span className="winner" /> : undefined}
                     </PlayerArea>

@@ -1,6 +1,7 @@
 # Tractor (拖拉机)
 
 ## Ran's House Rule and Features
+* Mobile UI: optimize the UI on the mobile phones with lots of improvements.
 * Boost: 20/30/40 points per level when the winning team is promoted.
 * No-cap: if a player's rank exceeds A, then continues with 2+.
 * Must-play: support an optional must-play feature on rank 5, 10, and K.

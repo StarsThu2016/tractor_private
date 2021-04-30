@@ -66,6 +66,8 @@ export class Kitty extends React.Component {
                 cardIds={kitty}
                 cardsById={cardsById}
                 faceUp={true}
+                adaptive={isMobile}
+                large={false}
             />;
           }
           return <Cards
@@ -73,6 +75,8 @@ export class Kitty extends React.Component {
               cardIds={kitty}
               cardsById={cardsById}
               faceUp={true}
+              adaptive={isMobile}
+              large={false}
           />;
         }
     }

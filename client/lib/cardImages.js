@@ -24,13 +24,13 @@ const SUITS = Object.freeze({
   'SPADE': 's',
 });
 
-function getImageSrc(name, large = false) {
+function getImageSrc(name, adaptive = false, large = false) {
   // [EditByRan] device-specific rendering
-  var suffix = (isMobile && large) ? "_large" : ""
+  var suffix = (isMobile && adaptive && large) ? "_large" : ((isMobile && adaptive) ? "_106w_28d" : "");
   return `./images/${name}${suffix}.gif`;
 }
 
-function getImageName(card) {
+function getImageName(card, adaptive, large) {
   if (card.value == 'SMALL_JOKER') {
     return 'Milli3'; // return 'jb';
   } else if (card.value == 'BIG_JOKER') {
@@ -57,10 +57,10 @@ export function preloadCardImages() {
   }
 }
 
-export function getFaceDownCardImageSrc(large = false) {
-  return getImageSrc('b1fv', large);
+export function getFaceDownCardImageSrc(adaptive = false, large = false) {
+  return getImageSrc('b1fv', adaptive, large);
 }
 
-export function getCardImageSrc(card, large = false) {
-  return getImageSrc(getImageName(card), large);
+export function getCardImageSrc(card, adaptive = false, large = false) {
+  return getImageSrc(getImageName(card), adaptive, large);
 }

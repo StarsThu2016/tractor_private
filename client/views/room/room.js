@@ -626,6 +626,7 @@ export class Room extends React.Component {
       if (isMobile && myPlayerId !== playerId){
         return;
       }
+      // [EditByRan] device-specific rendering: render my hand
       return (
         <PlayerArea
           key={`playerArea${playerId}`}
@@ -645,7 +646,8 @@ export class Room extends React.Component {
                 [cardId]: !selectedCardIds[cardId],
               },
             }) : undefined}
-            adaptive={playerId === myPlayerId}
+            adaptive={isMobile}
+            large={playerId === myPlayerId}
           />
         </PlayerArea>
       );
@@ -672,6 +674,8 @@ export class Room extends React.Component {
           cardIds={latestDeclaredCards.cardIds}
           cardsById={cardsById}
           faceUp={true}
+          adaptive={isMobile}
+          large={false}
         />
       </PlayerArea>
     </div>;
@@ -694,6 +698,8 @@ export class Room extends React.Component {
           cardIds={exposedBottomCards}
           cardsById={cardsById}
           faceUp={true}
+          adaptive={isMobile}
+          large={false}
         />
       </PlayerArea>
     </div>;

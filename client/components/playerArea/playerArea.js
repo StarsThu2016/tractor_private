@@ -54,11 +54,12 @@ export class PlayerArea extends React.Component {
 
     var CARD_HEIGHT = 192;
     var CARD_WIDTH = 142;
+    var CARD_HEIGHT_S = 143;
+    var CARD_WIDTH_S = 106;
     var centerPoint = {x: 0, y: 0};
     var angle = (myIndex - playerIndex) * 360. / playerIds.length;
     var shiftX0 = 0;
     if (isMobile && playerIds.length >= 4 && playerIds.length <= 6) {
-      var distance0 = distance;
       // 4p: [-1, 0, 1, 2], 5p: [-1, 0, 1, 2, 3], 6p: [-1, 0, 1, 2, 3, 4]
       var diff_index = (playerIndex-myIndex >= -1) ? (playerIndex - myIndex) : (playerIndex + playerIds.length - myIndex);
       if (diff_index >= playerIds.length - 1 && playerIds.length > 1) {
@@ -72,13 +73,13 @@ export class PlayerArea extends React.Component {
         // side names: do not place too wide
         centerPoint = {
           x: WIDTH/2 + diff_index * (WIDTH / 2 - 10 - 162),
-          y: HEIGHT - (10 + CARD_HEIGHT/2 + 20 + CARD_HEIGHT + 20),
+          y: HEIGHT - (10 + CARD_HEIGHT_S + 20 + CARD_HEIGHT + 20),
         };
       } else if (distance === 1.1) {
         // opposite name
         centerPoint = {
           x: WIDTH/2,
-          y: HEIGHT - (20 + CARD_HEIGHT/2 + 20 + CARD_HEIGHT/2 + 20 + CARD_HEIGHT + 20),
+          y: HEIGHT - (20 + CARD_HEIGHT_S + 20 + CARD_HEIGHT_S + 20 + CARD_HEIGHT + 20),
         };
       } else if (distance === 1){
         // my hands (others' hands won't be rendered)
@@ -90,30 +91,30 @@ export class PlayerArea extends React.Component {
         // my trick/decalre/expose card
         centerPoint = {
           x: WIDTH/2,
-          y: HEIGHT - (CARD_HEIGHT/2 + 20 + CARD_HEIGHT + 20),
+          y: HEIGHT - (CARD_HEIGHT_S + 20 + CARD_HEIGHT + 20),
         };
       } else if (distance === 0.2 && (diff_index === 1 || diff_index === -1)){
         // side trick/decalre/expose card
         centerPoint = {
-          x: WIDTH/2 + diff_index * (WIDTH / 2 - 20 - CARD_HEIGHT/2 - 162),
-          y: HEIGHT - (10 + CARD_HEIGHT/2 + 20 + CARD_HEIGHT + 20),
+          x: WIDTH/2 + diff_index * (WIDTH / 2 - 20 - CARD_HEIGHT_S - 162),
+          y: HEIGHT - (10 + CARD_HEIGHT_S + 20 + CARD_HEIGHT + 20),
         };
       } else if (distance === 0.2){
         // opposite trick/decalre/expose card
         centerPoint = {
           x: WIDTH/2,
-          y: HEIGHT - (20 + CARD_HEIGHT/2 + 20 + CARD_HEIGHT + 20),
+          y: HEIGHT - (20 + CARD_HEIGHT_S + 20 + CARD_HEIGHT + 20),
         };
       }
       angle = (diff_index<=1) ? (-diff_index) * 360. / 4 : 180;
       if (playerIds.length === 5 && diff_index === 2) {
-        shiftX0 = 170;
+        shiftX0 = 112;
       } else if (playerIds.length === 5 && diff_index === 3) {
-        shiftX0 = -170;
+        shiftX0 = -112;
       } else if (playerIds.length === 6 && diff_index === 2) {
-        shiftX0 = 250;
+        shiftX0 = 168;
       }  else if (playerIds.length === 6 && diff_index === 4) {
-        shiftX0 = -250;
+        shiftX0 = -168;
       }
     } else {
       centerPoint = {

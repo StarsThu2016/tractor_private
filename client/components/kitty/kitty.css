@@ -21,7 +21,7 @@
 
 .kitty .kitty_cards_mobile {
     position: absolute;
-    top: 414px; /* 800-386 */
+    bottom: 456px; /* center's bottom + CARD_HEIGHT_S/2 */
     right: 600px;
 }
 

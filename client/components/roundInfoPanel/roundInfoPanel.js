@@ -44,6 +44,11 @@ export class RoundInfoPanel extends React.Component {
           var trumpSuit = (currentTrump.suit === 'JOKER') ? 'NO TR.' : SUITS_SHORT[currentTrump.suit];
           return (
               <div className='round_info_panel_mobile'>
+                <div>
+                  {`${numDecks}${numDecks > 1 ? 'd' : 'd'}`}
+                  {findAFriend ? '·FAF' : undefined}
+                  {chaoDiPi ? '·CDP' : undefined}
+                </div>
                 <div>Trump: {VALUES[currentTrump.value]} {trumpSuit}</div>
                 <div>Starter: {this.renderPlayerId(playerIds[starterPlayerIndex])}</div>
                 <div>Points: {opponentsPoints}</div>

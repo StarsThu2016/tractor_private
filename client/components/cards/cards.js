@@ -23,7 +23,7 @@ export class Cards extends React.Component {
         // [EditByRan] device-specific rendering
         var WIDTH = 1200;
         var CARD_WIDTH = (isMobile && adaptive && large)? 142 : ((isMobile && adaptive) ? 106 : 71);
-        var interCardDistance = (isMobile && adaptive) ? (faceUp ? 29 : 18) : (faceUp ? 15 : 9);
+        var interCardDistance = (isMobile && adaptive) ? (faceUp ? 23 : 13) : (faceUp ? 15 : 9);
         if (isMobile && adaptive && large){
           interCardDistance = Math.floor((WIDTH-20-CARD_WIDTH)/(cardIds.length - 1));
           interCardDistance = Math.min(interCardDistance, 70);

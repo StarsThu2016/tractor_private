@@ -27,7 +27,8 @@ const SUITS = Object.freeze({
 function getImageSrc(name, adaptive = false, large = false) {
   // [EditByRan] device-specific rendering
   var suffix = (isMobile && adaptive && large) ? "_large" : ((isMobile && adaptive) ? "_106w_28d" : "");
-  return `./images/${name}${suffix}.gif`;
+  return (isMobile && adaptive) ? `./images/${name}${suffix}.gif` : `./images/${name}${suffix}.gif`;
+  // return (isMobile && adaptive) ? `./images/${name}${suffix}.png` : `./images/${name}${suffix}.gif`;
 }
 
 function getImageName(card, adaptive, large) {

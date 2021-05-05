@@ -24,11 +24,10 @@ const SUITS = Object.freeze({
   'SPADE': 's',
 });
 
-function getImageSrc(name, adaptive = false, large = false) {
+function getImageSrc(name, adaptive = false, large = false, narrow = false) {
   // [EditByRan] device-specific rendering
-  var suffix = (isMobile && adaptive && large) ? "_large" : ((isMobile && adaptive) ? "_106w_28d" : "");
-  return (isMobile && adaptive) ? `./images/${name}${suffix}.gif` : `./images/${name}${suffix}.gif`;
-  // return (isMobile && adaptive) ? `./images/${name}${suffix}.png` : `./images/${name}${suffix}.gif`;
+  var suffix = (isMobile && adaptive && large) ? (narrow ? "_142w_28d" : "_142w_38d") : ((isMobile && adaptive) ? "_106w" : "");
+  return (isMobile && adaptive) ? `./images/${name}${suffix}.png` : `./images/${name}${suffix}.gif`;
 }
 
 function getImageName(card, adaptive, large) {
@@ -46,22 +45,31 @@ export function preloadCardImages() {
     for (const suit in SUITS) {
       const img = new Image();
       img.src = getImageSrc(getImageName({ value: value, suit: suit }));
+      img.src = getImageSrc(getImageName({ value: value, suit: suit }), true, false, false);
+      img.src = getImageSrc(getImageName({ value: value, suit: suit }), true, true, false);
+      img.src = getImageSrc(getImageName({ value: value, suit: suit }), true, true, true);
     }
   }
   {
     const img = new Image();
     img.src = getImageSrc(getImageName({ value: 'BIG_JOKER' }));
+    img.src = getImageSrc(getImageName({ value: 'BIG_JOKER' }), true, false, false);
+    img.src = getImageSrc(getImageName({ value: 'BIG_JOKER' }), true, true, false);
+    img.src = getImageSrc(getImageName({ value: 'BIG_JOKER' }), true, true, true);
   }
   {
     const img = new Image();
     img.src = getImageSrc(getImageName({ value: 'SMALL_JOKER' }));
+    img.src = getImageSrc(getImageName({ value: 'SMALL_JOKER' }), true, false, false);
+    img.src = getImageSrc(getImageName({ value: 'SMALL_JOKER' }), true, true, false);
+    img.src = getImageSrc(getImageName({ value: 'SMALL_JOKER' }), true, true, true);
   }
 }
 
-export function getFaceDownCardImageSrc(adaptive = false, large = false) {
-  return getImageSrc('b1fv', adaptive, large);
+export function getFaceDownCardImageSrc(adaptive = false, large = false, narrow = false) {
+  return getImageSrc('b1fv', adaptive, large, narrow);
 }
 
-export function getCardImageSrc(card, adaptive = false, large = false) {
-  return getImageSrc(getImageName(card), adaptive, large);
+export function getCardImageSrc(card, adaptive = false, large = false, narrow = false) {
+  return getImageSrc(getImageName(card), adaptive, large, narrow);
 }

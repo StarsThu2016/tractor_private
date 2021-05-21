@@ -1,9 +1,9 @@
 /* [EditByRan] device-specific rendering */
 .find_a_friend_panel_mobile {
-    width: 300px;
+    width: 650px;
     background-color: orange;
-    margin-left: -160px;
-    top: 262px;
+    margin-left: -335px;
+    top: 242px;
     left: 50%;
     position: absolute;
     padding: 0 20px;
@@ -13,22 +13,25 @@
 }
 
 .find_a_friend_panel_mobile h3 {
-    font-size: 18px;
+    font-size: 32px;
     margin: 18px 0;
 }
 
 .find_a_friend_panel_mobile .friend_row {
+    font-size: 32px;
     margin-bottom: 4px;
 }
 
 .find_a_friend_panel_mobile select {
-    height: 26px;
+    font-size: 32px;
+    height: 40px;
     margin: 4px;
 }
 
 .find_a_friend_panel_mobile .make_friend_button {
-    height: 26px;
-    margin: 9px 0 18px 0;
+    font-size: 32px;
+    height: 40px;
+    margin: 18px 0px 18px 0px;
 }
 
 .find_a_friend_panel {

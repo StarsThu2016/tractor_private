@@ -68,42 +68,42 @@ export class PlayerArea extends React.Component {
 
       if (distance === 1.8 && diff_index === 0){
         // my name
-        centerPoint = {x: WIDTH/2, y: HEIGHT - 20};
+        centerPoint = {x: WIDTH/2, y: HEIGHT - 40};
       } else if (distance === 1.1 && (diff_index === 1 || diff_index === -1)){
         // side names: do not place too wide
         centerPoint = {
-          x: WIDTH/2 + diff_index * (WIDTH / 2 - 10 - 162),
-          y: HEIGHT - (10 + CARD_HEIGHT_S + 20 + CARD_HEIGHT + 20),
+          x: WIDTH/2 + diff_index * (WIDTH / 2 - 20 - 162),
+          y: HEIGHT - (10 + CARD_HEIGHT_S + 20 + CARD_HEIGHT + 40),
         };
       } else if (distance === 1.1) {
         // opposite name
         centerPoint = {
           x: WIDTH/2,
-          y: HEIGHT - (20 + CARD_HEIGHT_S + 20 + CARD_HEIGHT_S + 20 + CARD_HEIGHT + 20),
+          y: HEIGHT - (40 + CARD_HEIGHT_S + 20 + CARD_HEIGHT_S + 20 + CARD_HEIGHT + 40),
         };
       } else if (distance === 1){
         // my hands (others' hands won't be rendered)
         centerPoint = {
           x: WIDTH/2,
-          y: HEIGHT - (CARD_HEIGHT + 20),
+          y: HEIGHT - (CARD_HEIGHT + 40),
         };
       } else if (distance === 0.2 && diff_index === 0){
         // my trick/decalre/expose card
         centerPoint = {
           x: WIDTH/2,
-          y: HEIGHT - (CARD_HEIGHT_S + 20 + CARD_HEIGHT + 20),
+          y: HEIGHT - (CARD_HEIGHT_S + 20 + CARD_HEIGHT + 40),
         };
       } else if (distance === 0.2 && (diff_index === 1 || diff_index === -1)){
         // side trick/decalre/expose card
         centerPoint = {
-          x: WIDTH/2 + diff_index * (WIDTH / 2 - 20 - CARD_HEIGHT_S - 162),
-          y: HEIGHT - (10 + CARD_HEIGHT_S + 20 + CARD_HEIGHT + 20),
+          x: WIDTH/2 + diff_index * (WIDTH / 2 - 40 - CARD_HEIGHT_S - 162),
+          y: HEIGHT - (10 + CARD_HEIGHT_S + 20 + CARD_HEIGHT + 40),
         };
       } else if (distance === 0.2){
         // opposite trick/decalre/expose card
         centerPoint = {
           x: WIDTH/2,
-          y: HEIGHT - (20 + CARD_HEIGHT_S + 20 + CARD_HEIGHT + 20),
+          y: HEIGHT - (20 + CARD_HEIGHT_S + 20 + CARD_HEIGHT + 40),
         };
       }
       angle = (diff_index<=1) ? (-diff_index) * 360. / 4 : 180;

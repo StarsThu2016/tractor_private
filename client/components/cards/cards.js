@@ -28,7 +28,7 @@ export class Cards extends React.Component {
           interCardDistance = Math.floor((WIDTH-20-CARD_WIDTH)/(cardIds.length - 1));
           interCardDistance = Math.min(interCardDistance, 70);
         }
-        var narrow = (cardIds.length >= 34);
+        var narrow = (cardIds.length >= 32);
         const totalWidth = CARD_WIDTH + interCardDistance * (cardIds.length - 1);
         const cardImgs = cardIds
             .map((cardId, index) => {

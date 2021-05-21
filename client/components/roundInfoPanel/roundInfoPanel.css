@@ -1,13 +1,14 @@
 /* [EditByRan] device-specific rendering */
 .round_info_panel_mobile {
     position: absolute;
-    top: 242px;
+    top: 202px;
     left: 10px;
     padding: 8px;
     color: darkblue;
     border: 1px solid black;
     border-radius: 8px;
     background-color: tan;
+    font-size: 24px;
 }
 
 .round_info_panel_mobile .section {

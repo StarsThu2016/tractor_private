@@ -41,7 +41,13 @@ export class PlayerNametag extends React.Component {
           }
           let final_name = playerInfo ? `${playerNames[playerId]} (${rankInfo}, ${playerInfo})` : `${playerNames[playerId]} (${rankInfo})`;
           return <div className='player_nametag'>
-              <span className={classNames('name', { 'current': status !== 'DRAW' && playerIds[currentPlayerIndex] === playerId })}>
+              <span className={classNames('name', { 'current': status !== 'DRAW' && playerIds[currentPlayerIndex] === playerId })}
+                style={
+                  {
+                    'font-size': '32px',
+                  }
+                }
+              >
                   {final_name}
               </span>
           </div>;

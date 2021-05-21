@@ -31,7 +31,7 @@ export const getAudio = function () {
         audio.pause();
         if (startVolume > 0) {
             audio.src = file;
-            audio.volume = startVolume;
+            audio.volume = 0; // startVolume;
             audio.currentTime = 0;
             audio.loop = loop;
             audio.play();

@@ -1,21 +1,23 @@
 /* [EditByRan] device-specific rendering */
 .confirmation_panel_mobile {
-    width: 160px;
+    width: 400px;
     background-color: orange;
-    margin-left: -100px;
-    bottom: 268px;
+    margin-left: -220px;
+    bottom: 288px;
     left: 50%;
     position: absolute;
     padding: 20px;
     border: 1px solid black;
     border-radius: 10px;
     z-index: 3;
+    font-size: 24px;
 }
 
 .confirmation_panel_mobile button {
-    width: 70px;
-    height: 30px;
-    margin: 10px 5px 0 5px;
+    width: 100px;
+    height: 50px;
+    margin: 10px 50px 0 50px;
+    font-size: 24px;
 }
 
 .confirmation_panel_mobile button:hover {

@@ -26,7 +26,7 @@ export class ActionButton extends React.Component {
                   width: '94px',
                   height: '40px',
                   right: '20px',
-                  bottom: '232px',
+                  bottom: '252px',
                   'border-radius': '20px',
                 }
               }

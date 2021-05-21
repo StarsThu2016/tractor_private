@@ -33,7 +33,7 @@
 .settings_panel .forfeit_mobile {
     width: 40px;
     height: 40px;
-    bottom: 232px;
+    bottom: 252px;
     left: 20px;
     background-image: url("../../assets/images/forfeit.png");
 }
@@ -41,7 +41,7 @@
 .settings_panel .leave_room_mobile {
     width: 40px;
     height: 40px;
-    bottom: 232px;
+    bottom: 252px;
     left: 20px;
     background-image: url("../../assets/images/leave_room.png");
 }
@@ -49,14 +49,14 @@
 .settings_panel .sound_mobile {
     width: 40px;
     height: 40px;
-    bottom: 302px;
+    bottom: 322px;
     left: 20px;
 }
 
 .settings_panel .undo_mobile {
     width: 40px;
     height: 40px;
-    bottom: 232px;
+    bottom: 252px;
     left: 90px;
     background-image: url("../../assets/images/undo.png");
 }
@@ -64,7 +64,7 @@
 .settings_panel .edit_players_mobile {
     width: 40px;
     height: 40px;
-    bottom: 162px;
+    bottom: 182px;
     left: 20px;
     background-image: url("../../assets/images/edit_players.png");
 }

@@ -122,7 +122,8 @@ export class RoundInfoPanel extends React.Component {
               <div>
                   {playerIdsWithPenalties.map((playerId, index) => {
                       return <div key={`penalty${index}`}>
-                          {'P: ' + this.renderPlayerId(playerId)}
+                          {'P: '}
+                          {this.renderPlayerId(playerId)}
                           {` ${currentRoundPenalties[playerId]} points`}
                       </div>;
                   })}

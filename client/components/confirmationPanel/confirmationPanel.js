@@ -17,8 +17,7 @@ export class ConfirmationPanel extends React.Component {
         // if is_tall_panel: subtract 96px from bottom 385px
         // else: subtract 60px from bottom 385px
         if (isMobile) {
-          var bottom_value = is_tall_panel ? '289px' : '325px';
-          console.log(bottom_value);
+          var bottom_value = is_tall_panel ? '309px' : '345px';
           return (
               <div className='confirmation_panel_mobile'
                    style={

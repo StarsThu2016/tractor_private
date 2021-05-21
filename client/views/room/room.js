@@ -54,7 +54,7 @@ export class Room extends React.Component {
       notifications: {},
       showPreviousTrick: false,
       confirmSpecialPlayCards: undefined, // CardId[]?
-      soundVolume: 1, // 0, 1, 2, or 3
+      soundVolume: 0, // 0, 1, 2, or 3
       isEditingPlayers: false, // boolean
       localName: undefined, // string
       // [EditByRan] Allow PC users to use mobile UI.

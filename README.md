@@ -2,7 +2,7 @@
 
 ## Ran's House Rule and Features
 * Mobile UI: optimize the UI on the mobile phones with lots of improvements.
-* Boost: 20/30/40 points per level when the winning team is promoted.
+* Boost (optional): 20/30/40 points per rank when the winning team is promoted.
 * No-cap: if a player's rank exceeds A, then continues with 2+.
 * Must-play: support an optional must-play feature on rank 5, 10, and K.
 * Compensate in Find-a-Friend mode: give 10/15/20 points to the non-declare team, when there are 2/3/4 decks in total.
@@ -25,7 +25,6 @@
 ## Bugs and Future Improvements
 * If nobody claims and a trump is picked by uncovering the kitty, somebody other than the kitty owner may be able to see the kitty. Refreshing the webpage can fix the bug. 
 * First game with rank modifications, the union of all ranks is declarable for every one. But one should only decalre his/her own rank.
-* Allow boost/normal speed.
 * Allow ordered Chao-Di-Pi, optionally.
 * First player plays QQQA, the follower with 99AA has to play both pairs, instead of just one. This is because both "99" and "AA" belong to the "must-play" set and the player cannot replace one of them by two singles.
 * Occationally, players get cards with face down due to unknown communication errors.

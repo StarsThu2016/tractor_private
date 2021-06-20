@@ -106,6 +106,7 @@ public interface IncomingMessage {
     // [EditByRan] Implement must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
     // [EditByRan] Implement the ban-take-back feature.
+    // [EditByRan] Allow users to switch back to the standard speed.
     @Data
     @NoArgsConstructor
     public static class GameConfigurationRequest implements IncomingMessage {
@@ -115,6 +116,7 @@ public interface IncomingMessage {
         private boolean mustPlay5;
         private boolean mustPlay10;
         private boolean mustPlayK;
+        private boolean standardSpeed;
         private boolean chaoDiPi;
         private boolean banTB;
     }

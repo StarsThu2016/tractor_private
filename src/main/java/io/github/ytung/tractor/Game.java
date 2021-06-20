@@ -39,11 +39,13 @@ public class Game {
     // [EditByRan] Implement must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
     // [EditByRan] Implement the ban-take-back feature.
+    // [EditByRan] Allow users to switch back to the standard speed.
     private int numDecks = 2;
     private boolean findAFriend = false;
     private boolean mustPlay5 = false;
     private boolean mustPlay10 = false;
     private boolean mustPlayK = false;
+    private boolean standardSpeed = false;
     private boolean chaoDiPi = false;
     private boolean banTB = false;
     private int kittyOwnerIndex;
@@ -147,6 +149,11 @@ public class Game {
 
     public synchronized void setMustPlayK(boolean mustPlayK) {
         this.mustPlayK = mustPlayK;
+    }
+
+    // [EditByRan] Allow users to switch back to the standard speed.
+    public synchronized void setStandardSpeed(boolean standardSpeed) {
+        this.standardSpeed = standardSpeed;
     }
 
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
@@ -625,15 +632,19 @@ public class Game {
             }
             roundScore = (roundScore < 0) ? 0 : roundScore; // [EditByRan] bug fix -- cap min of roundscore at 0
             boolean doDeclarersWin = roundScore < 40 * numDecks;
-            //int scoreIncrease = doDeclarersWin
-            //        ? (roundScore == 0 ? 3 : 2 - roundScore / (20 * numDecks))
-            //        : roundScore / (20 * numDecks) - 2;
 
-            // [EditByRan] speed up the game with 20/30 score for each level
-            int scoreIncrease = doDeclarersWin
+            // [EditByRan] speed up the game with 20/30 score for each level.
+            // [EditByRan] Allow users to switch back to the standard speed.
+            int scoreIncrease = 0;
+            if (standardSpeed){
+              scoreIncrease = doDeclarersWin
+                    ? (roundScore == 0 ? 3 : 2 - roundScore / (20 * numDecks))
+                    : roundScore / (20 * numDecks) - 2;
+            } else {
+              scoreIncrease = doDeclarersWin
                     ? (roundScore == 0 ? 5 : 4 - roundScore / (10 * numDecks))
                     : roundScore / (10 * numDecks) - 4;
-
+            }
             finishRound(doDeclarersWin, scoreIncrease);
 
             currentPlayerIndex = -1;

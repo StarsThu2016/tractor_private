@@ -126,6 +126,7 @@ public class TractorRoom {
         // [EditByRan] Implement must-play-rank feature.
         // [EditByRan] Implement the "Chao-Di-Pi" feature.
         // [EditByRan] Implement the ban-take-back feature.
+        // [EditByRan] Allow users to switch back to the standard speed.
         r.write(JacksonEncoder.INSTANCE.encode(new FullRoomState(
             game.getPlayerIds(),
             game.getNumDecks(),
@@ -133,6 +134,7 @@ public class TractorRoom {
             game.isMustPlay5(),
             game.isMustPlay10(),
             game.isMustPlayK(),
+            game.isStandardSpeed(),
             game.isChaoDiPi(),
             game.isBanTB(),
             game.getKittyOwnerIndex(),
@@ -270,12 +272,14 @@ public class TractorRoom {
         // [EditByRan] Implement the must-play-rank feature.
         // [EditByRan] Implement the Chao-Di-Pi feature.
         // [EditByRan] Implement the ban-take-back feature.
+        // [EditByRan] Allow users to switch back to the standard speed.
         if (message instanceof GameConfigurationRequest) {
             game.setNumDecks(((GameConfigurationRequest) message).getNumDecks());
             game.setFindAFriend(((GameConfigurationRequest) message).isFindAFriend());
             game.setMustPlay5(((GameConfigurationRequest) message).isMustPlay5());
             game.setMustPlay10(((GameConfigurationRequest) message).isMustPlay10());
             game.setMustPlayK(((GameConfigurationRequest) message).isMustPlayK());
+            game.setStandardSpeed(((GameConfigurationRequest) message).isStandardSpeed());
             game.setChaoDiPi(((GameConfigurationRequest) message).isChaoDiPi());
             game.setBanTB(((GameConfigurationRequest) message).isBanTB());
             playerReadyForPlay.replaceAll((k, v) -> v=false);
@@ -285,6 +289,7 @@ public class TractorRoom {
                 game.isMustPlay5(),
                 game.isMustPlay10(),
                 game.isMustPlayK(),
+                game.isStandardSpeed(),
                 game.isChaoDiPi(),
                 game.isBanTB(),
                 game.getKittySize(),
@@ -552,6 +557,7 @@ public class TractorRoom {
             game.isMustPlay5(),
             game.isMustPlay10(),
             game.isMustPlayK(),
+            game.isStandardSpeed(),
             game.isChaoDiPi(),
             game.isBanTB(),
             game.getKittySize(),

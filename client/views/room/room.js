@@ -67,9 +67,11 @@ export class Room extends React.Component {
       // [EditByRan] Implement the must-play-rank feature.
       // [EditByRan] Implement the "Chao-Di-Pi" feature.
       // [EditByRan] Implement the ban-take-back feature.
+      // [EditByRan] Allow users to switch back to the standard speed.
       mustPlay5: false, // boolean
       mustPlay10: false, // boolean
       mustPlayK: false, // boolean
+      standardSpeed: false, // boolean
       chaoDiPi: false,  // boolean
       banTB: false,  // boolean
       kittyOwnerIndex: undefined, // integer
@@ -334,6 +336,7 @@ export class Room extends React.Component {
 
   // [EditByRan] Implement the must-play-rank feature.
   // [EditByRan] Implement the "Chao-Di-Pi" feature.
+  // [EditByRan] Allow users to switch back to the standard speed.
   renderRoundStartPanel() {
     const {
       aiControllers,
@@ -349,6 +352,7 @@ export class Room extends React.Component {
       mustPlay5,
       mustPlay10,
       mustPlayK,
+      standardSpeed,
       chaoDiPi,
       banTB,
       mobileUI,
@@ -376,6 +380,7 @@ export class Room extends React.Component {
         mustPlay5={mustPlay5}
         mustPlay10={mustPlay10}
         mustPlayK={mustPlayK}
+        standardSpeed={standardSpeed}
         chaoDiPi={chaoDiPi}
         banTB={banTB}
         mobileUI={mobileUI}
@@ -413,6 +418,7 @@ export class Room extends React.Component {
       mustPlay5,
       mustPlay10,
       mustPlayK,
+      standardSpeed,
       chaoDiPi,
     } = this.state;
     return <RoundInfoPanel
@@ -430,20 +436,22 @@ export class Room extends React.Component {
       mustPlay5={mustPlay5}
       mustPlay10={mustPlay10}
       mustPlayK={mustPlayK}
+      standardSpeed={standardSpeed}
       chaoDiPi={chaoDiPi}
     />;
   }
 
   // [EditByRan] Implement the must-play-rank feature.
   // [EditByRan] Implement the "Chao-Di-Pi" feature.
+  // [EditByRan] Allow users to switch back to the standard speed.
   renderGameInfo() {
-    const {playerNames, myPlayerId, playerIds, numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi, playerRankScores, playerRankCycles, status} = this.state;
+    const {playerNames, myPlayerId, playerIds, numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, standardSpeed, chaoDiPi, playerRankScores, playerRankCycles, status} = this.state;
     if (status === 'START_ROUND') {
       return; // all info is already shown in the round start panel
     }
     // [EditByRan] Implement the must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
-    // [EditByRan] device-specific rendering: eliminate GameInfo
+    // [EditByRan] device-specific rendering: eliminate GameInfo.
     if (isMobile)
       return;
     return <GameInfoPanel

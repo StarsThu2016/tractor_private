@@ -40,6 +40,7 @@ export class RoundStartPanel extends React.Component {
             mustPlay5,
             mustPlay10,
             mustPlayK,
+            standardSpeed,
             chaoDiPi,
             banTB,
             mobileUI,
@@ -161,11 +162,11 @@ export class RoundStartPanel extends React.Component {
                     <div>
                         <i
                             className={numDecks < 10 ? 'arrow up' : 'hidden'}
-                            onClick={() => setGameConfiguration({ numDecks: numDecks + 1, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi, banTB })}
+                            onClick={() => setGameConfiguration({ numDecks: numDecks + 1, findAFriend, mustPlay5, mustPlay10, mustPlayK, standardSpeed, chaoDiPi, banTB })}
                         />
                         <i
                             className={numDecks > 1 ? 'arrow down' : 'hidden'}
-                            onClick={() => setGameConfiguration({ numDecks: numDecks - 1, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi, banTB })}
+                            onClick={() => setGameConfiguration({ numDecks: numDecks - 1, findAFriend, mustPlay5, mustPlay10, mustPlayK, standardSpeed, chaoDiPi, banTB })}
                         />
                         {`${numDecks} ${numDecks > 1 ? 'decks' : 'deck'}`}
                     </div>
@@ -173,19 +174,19 @@ export class RoundStartPanel extends React.Component {
                         <input
                             type="checkbox"
                             checked={findAFriend}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend: !findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi, banTB })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend: !findAFriend, mustPlay5, mustPlay10, mustPlayK, standardSpeed, chaoDiPi, banTB })}
                         />
                         {"Find-a-friend"}
                         <input
                             type="checkbox"
                             checked={chaoDiPi}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi: !chaoDiPi, banTB })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, standardSpeed, chaoDiPi: !chaoDiPi, banTB })}
                         />
                         {"Chao-Di-Pi"}
                         <input
                             type="checkbox"
                             checked={banTB}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, chaoDiPi, banTB: !banTB })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK, standardSpeed, chaoDiPi, banTB: !banTB })}
                         />
                         {"Ban take-back"}
                     </div>
@@ -193,21 +194,29 @@ export class RoundStartPanel extends React.Component {
                         <input
                             type="checkbox"
                             checked={mustPlay5}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5: !mustPlay5, mustPlay10, mustPlayK, chaoDiPi, banTB })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5: !mustPlay5, mustPlay10, mustPlayK, standardSpeed, chaoDiPi, banTB })}
                         />
                         {"Must play rank 5 "}
                         <input
                             type="checkbox"
                             checked={mustPlay10}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10: !mustPlay10, mustPlayK, chaoDiPi, banTB })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10: !mustPlay10, mustPlayK, standardSpeed, chaoDiPi, banTB })}
                         />
                         {"Rank 10 "}
                         <input
                             type="checkbox"
                             checked={mustPlayK}
-                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK: !mustPlayK, chaoDiPi, banTB })}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5, mustPlay10, mustPlayK: !mustPlayK, standardSpeed, chaoDiPi, banTB })}
                         />
                         {"Rank K"}
+                    </div>
+                    <div>
+                        <input
+                            type="checkbox"
+                            checked={standardSpeed}
+                            onChange={() => setGameConfiguration({ numDecks, findAFriend, mustPlay5: mustPlay5, mustPlay10, mustPlayK, standardSpeed: !standardSpeed, chaoDiPi, banTB })}
+                        />
+                        {"Standard speed (40 pts/rank)"}
                     </div>
                     <div className={!isMobile0 ? '' : 'hidden'}>
                         <input

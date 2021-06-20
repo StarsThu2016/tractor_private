@@ -25,6 +25,7 @@ export class RoundInfoPanel extends React.Component {
             mustPlay5,
             mustPlay10,
             mustPlayK,
+            standardSpeed,
             chaoDiPi,
         } = this.props;
 
@@ -51,7 +52,7 @@ export class RoundInfoPanel extends React.Component {
                 </div>
                 <div>Trump: {VALUES[currentTrump.value]} {trumpSuit}</div>
                 <div>Starter: {this.renderPlayerId(playerIds[starterPlayerIndex])}</div>
-                <div>Points: {opponentsPoints}</div>
+                <div>{standardSpeed ? 'Pts(std): ' : 'Points: '}{opponentsPoints}</div>
                 {this.maybeRenderFindAFriendDeclaration(findAFriendDeclaration)}
                 {this.maybeRenderPenalties(currentRoundPenalties)}
               </div>
@@ -62,7 +63,7 @@ export class RoundInfoPanel extends React.Component {
               <div className='round_info_panel'>
                   <div>Current trump: {VALUES[currentTrump.value]} of {trumpSuit}</div>
                   <div>Starter: {this.renderPlayerId(playerIds[starterPlayerIndex])}</div>
-                  <div>Opponent&apos;s points: {opponentsPoints}</div>
+                  <div>{standardSpeed ? 'Points (standard speed): ' : 'Opponent&apos;s points: '}{opponentsPoints}</div>
                   {this.maybeRenderFindAFriendDeclaration(findAFriendDeclaration)}
                   {this.maybeRenderPenalties(currentRoundPenalties)}
               </div>
@@ -145,6 +146,9 @@ export class RoundInfoPanel extends React.Component {
 
     renderPlayerId(playerId) {
         const { playerNames, myPlayerId } = this.props;
+        if (isMobile) {
+            return playerId === myPlayerId ? <span className='me'>{'You'}</span> : playerNames[playerId].slice(0, 7);
+        }
         return playerId === myPlayerId ? <span className='me'>{'You'}</span> : playerNames[playerId];
     }
 }

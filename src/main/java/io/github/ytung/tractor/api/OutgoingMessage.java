@@ -91,6 +91,7 @@ public interface OutgoingMessage {
     // [EditByRan] Implement must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
     // [EditByRan] Implement the ban-take-back feature.
+    // [EditByRan] Allow users to switch back to the standard speed.
     @Data
     public static class FullRoomState implements OutgoingMessage {
 
@@ -101,6 +102,7 @@ public interface OutgoingMessage {
         private final boolean mustPlay5;
         private final boolean mustPlay10;
         private final boolean mustPlayK;
+        private final boolean standardSpeed;
         private final boolean chaoDiPi;
         private final boolean banTB;
         private final int kittyOwnerIndex;
@@ -144,6 +146,7 @@ public interface OutgoingMessage {
     // [EditByRan] Implement must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
     // [EditByRan] Implement the ban-take-back feature.
+    // [EditByRan] Allow users to switch back to the standard speed.
     @Data
     public static class UpdatePlayers implements OutgoingMessage {
 
@@ -154,6 +157,7 @@ public interface OutgoingMessage {
         private final boolean mustPlay5;
         private final boolean mustPlay10;
         private final boolean mustPlayK;
+        private final boolean standardSpeed;
         private final boolean chaoDiPi;
         private final boolean banTB;
         private final int kittySize;
@@ -166,6 +170,7 @@ public interface OutgoingMessage {
     // [EditByRan] Implement must-play-rank feature.
     // [EditByRan] Implement the "Chao-Di-Pi" feature.
     // [EditByRan] Implement the ban-take-back feature.
+    // [EditByRan] Allow users to switch back to the standard speed.
     @Data
     public static class GameConfiguration implements OutgoingMessage {
 
@@ -174,6 +179,7 @@ public interface OutgoingMessage {
         private final boolean mustPlay5;
         private final boolean mustPlay10;
         private final boolean mustPlayK;
+        private final boolean standardSpeed;
         private final boolean chaoDiPi;
         private final boolean banTB;
         private final int kittySize;

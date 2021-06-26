@@ -32,7 +32,7 @@ public class Cards {
         if (card.getSuit() == Card.Suit.JOKER)
             return card.getValue().ordinal() + 1;
         else if (card.getValue() == trump.getValue())
-            return Card.Value.SMALL_JOKER.ordinal() - (card.getSuit() == trump.getSuit() ? 0 : 1);
+            return Card.Value.SMALL_JOKER.ordinal() - ((card.getSuit() == trump.getSuit() || trump.getSuit() == Card.Suit.JOKER) ? 0 : 1);
         else if (card.getValue().ordinal() > trump.getValue().ordinal())
             return card.getValue().ordinal() - 1;
         else

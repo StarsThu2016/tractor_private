@@ -63,7 +63,7 @@ export class RoundInfoPanel extends React.Component {
               <div className='round_info_panel'>
                   <div>Current trump: {VALUES[currentTrump.value]} of {trumpSuit}</div>
                   <div>Starter: {this.renderPlayerId(playerIds[starterPlayerIndex])}</div>
-                  <div>{standardSpeed ? 'Points (standard speed): ' : 'Opponent&apos;s points: '}{opponentsPoints}</div>
+                  <div>{standardSpeed ? 'Points (standard speed): ' : 'Opponent\'s points: '}{opponentsPoints}</div>
                   {this.maybeRenderFindAFriendDeclaration(findAFriendDeclaration)}
                   {this.maybeRenderPenalties(currentRoundPenalties)}
               </div>

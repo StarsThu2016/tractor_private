@@ -218,7 +218,7 @@ export class RoundStartPanel extends React.Component {
                         />
                         {"Standard speed (40 pts/rank)"}
                     </div>
-                    <div className={!isMobile0 ? '' : 'hidden'}>
+                    <div className={(!isMobile0 && playerIds.length >= 4 && playerIds.length <= 6) ? '' : 'hidden'}>
                         <input
                             type="checkbox"
                             checked={mobileUI}

@@ -94,7 +94,7 @@ export class SettingsPanel extends React.Component {
               return <div
                   className='button leave_room_mobile'
                   onClick={() => this.setState({ isConfirmingLeave: !isConfirmingLeave })}
-                  title={"Sound volume"}
+                  title={"Leave the room"}
               />;
           } else {
               return <div
@@ -108,7 +108,7 @@ export class SettingsPanel extends React.Component {
             return <div
                 className='button leave_room'
                 onClick={() => this.setState({ isConfirmingLeave: !isConfirmingLeave })}
-                title={"Sound volume"}
+                title={"Leave the room"}
             />;
         } else {
             return <div

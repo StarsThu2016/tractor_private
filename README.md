@@ -105,7 +105,7 @@ heroku buildpacks:add heroku/jvm
 git push heroku master
 heroku ps:scale web=1
 ```
-Note: remember to push ```build/libs/tractor-all.jar``` to the git repo.
+Note: remember to push ```build/libs/tractor-all.jar``` to the git repo, and set "Config Vars": KEY=NODE_OPTIONS, VALUE=--openssl-legacy-provider.
 
 ## Development Steps
 * Modify the source code.

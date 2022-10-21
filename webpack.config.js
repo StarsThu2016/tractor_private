@@ -60,6 +60,9 @@ if (TARGET === 'start' || !TARGET) {
     },
     devtool: 'source-map',
     mode: 'development',
+    output: {
+        hashFunction: "sha256"
+    },
   });
 }
 

@@ -1,17 +1,17 @@
 # Tractor (拖拉机)
 
-## Ran's House Rule and Features
-* Mobile UI: optimize the UI on the mobile phones with lots of improvements.
-* Boost (optional): 20/40 points per rank when the winning team is promoted.
-* No-cap: if a player's rank exceeds A, then continues with 2+.
-* Must-play (optional): Must-play feature on rank 5, 10, and K. Players can pass these ranks only if they are at these rank, in the declare team, and win.
-* Compensate in Find-a-Friend mode: give 10/15/20 points to the non-declare team in 2/3/4 decks setting.
-* Chao-Di-Pi mode:
-  * Cook ordering: ... > 3 big jokers > 3 small jokers > 222 > 2 big jokers > 2 small jokers > 22.
-  * Suggest to enable the "must-play-on X" feature because the "cook" team may easily get 200+ points.
-  * The starter cannot be the first one to "cook" after he/she just makes the kitty.
-  * A person cannot "cook" his/her own declaration.
-  * In "Find-a-Friend" mode, a cook is not allowed to insert the "declaration of friend" card into the kitty, except the starter (having the risk of not finding friends).
+## House Rules and Features
+* Mobile UI: Optimized for mobile phones with numerous improvements.
+* No-cap: If a player's rank exceeds A, they continue with 2+.
+* Compensation in Find-a-Friend Mode: Award 10/15/20 points to the non-declare team in 2/3/4 deck settings if the number of players is even.
+* Boost (optional): 20/40 points per rank.
+* Must-play (optional): Players must play on ranks 5, 10, and K. They can pass these ranks only if they are at these ranks, in the declare team, and win.
+* Chao-Di-Pi mode (optional):
+  * Cook Ordering: ... > 3 big jokers > 3 small jokers > 222 > 2 big jokers > 2 small jokers > 22.
+  * Must-play-on X: Recommended to enable this feature as the non-declare team, if cooked, may easily get 200+ points.
+  * Starter Rule: The starter cannot be the first to "cook" after making the kitty.
+  * Self-Cook Rule: A player cannot "cook" their own declaration.
+  * Find-a-Friend Mode: A cook cannot insert the "declaration of friend" card into the kitty, except for the starter (risking not finding friends).
 
 ## Ran's Patch to the Bugs and Ran's Modifications
 * Patch 1: if the first player makes a special play, e.g. spades AK, the following player cannot cover by spades 99.
